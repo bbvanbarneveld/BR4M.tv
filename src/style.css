@@ -1,0 +1,393 @@
+/* BR4M.tv — recreation of https://br4m.tv/ */
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+:root {
+  color-scheme: dark;
+  --bg: #000000;
+  --font-body: "DM Sans", system-ui, sans-serif;
+  --font-display: "Climate Crisis", sans-serif;
+  --intro-beam: 1;
+  --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-out-quart: cubic-bezier(0.25, 1, 0.5, 1);
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+  min-height: 100%;
+}
+
+body {
+  position: relative;
+  font-family: var(--font-body);
+  font-size: 16px;
+  line-height: 1.65;
+  color: #6e6d76;
+  background: #000;
+  overflow-x: hidden;
+}
+
+/* Start black until intro.js drives --intro-beam */
+body.is-intro {
+  --intro-beam: 0;
+}
+
+/* Safety: hide UI if JS fails to mark ready and we're not in intro */
+body:not(.is-ready):not(.is-intro) .hero-title,
+body:not(.is-ready):not(.is-intro) .cta-signal,
+body:not(.is-ready):not(.is-intro) .page-copy,
+body:not(.is-ready):not(.is-intro) .site-footer {
+  opacity: 0;
+}
+
+img {
+  max-width: 100%;
+  height: auto;
+  display: block;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+.skip-link {
+  position: absolute;
+  left: -9999px;
+  top: 0;
+  z-index: 1000;
+  padding: 0.75rem 1rem;
+  background: #fff;
+  color: #000;
+}
+
+.skip-link:focus {
+  left: 1rem;
+  top: 1rem;
+}
+
+/* —— Hero / light strings —— */
+.hero {
+  position: relative;
+  min-height: 100vh;
+  min-height: 100dvh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  background: #000;
+  padding: 0 10px;
+}
+
+.fluid-canvas {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  width: 100%;
+  height: 100%;
+  display: block;
+  pointer-events: none;
+  /* Always visible so the starfield can sit in the intro void;
+     beam brightness is driven in the shader via intensity. */
+  opacity: 1;
+}
+
+/*
+  No stacking context on hero-inner (no z-index / filter / opacity / isolation)
+  so mix-blend-mode can sample the WebGL canvas behind.
+*/
+.hero-inner {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 20px;
+  text-align: center;
+  pointer-events: none;
+}
+
+/*
+  Title: one opaque paint layer + overlay.
+  Dual semi-transparent layers stacked white where italic 4 ∩ M.
+  Soft-light keeps letterforms readable without a solid pink frost.
+*/
+.hero-title {
+  position: relative;
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: clamp(5.5rem, 18vw, 12.5rem);
+  font-weight: 700;
+  line-height: 1;
+  letter-spacing: normal;
+  user-select: none;
+  color: #ffffff;
+  mix-blend-mode: soft-light;
+  /* never animate opacity here — isolates blend from the canvas */
+}
+
+.hero-title i {
+  font-style: italic;
+  font-weight: inherit;
+  font-size: inherit;
+  line-height: inherit;
+}
+
+.hero-title--sm {
+  font-size: clamp(3rem, 12vw, 6rem);
+}
+
+.page-copy {
+  margin: 0;
+  max-width: 28rem;
+  font-family: var(--font-body);
+  font-size: 1rem;
+  line-height: 1.6;
+  color: #ffffff;
+  mix-blend-mode: soft-light;
+  pointer-events: none;
+}
+
+/*
+  CTA — “Tune in”: beam-aligned rails + live pulse.
+  No frosted box; sits in the same language as the light string.
+*/
+.cta-signal {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: 14px;
+  pointer-events: auto;
+  padding: 6px 0;
+  color: rgba(255, 255, 255, 0.88);
+  font-family: var(--font-body);
+  text-decoration: none;
+  mix-blend-mode: soft-light;
+  transition: color 0.25s ease, letter-spacing 0.35s var(--ease-out-expo);
+}
+
+.cta-signal__rail {
+  display: block;
+  width: 36px;
+  height: 1px;
+  background: rgba(255, 255, 255, 0.55);
+  transform-origin: center;
+  transition: width 0.4s var(--ease-out-expo), opacity 0.25s ease, background-color 0.25s ease;
+}
+
+.cta-signal__core {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.cta-signal__label {
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+  line-height: 1;
+  padding-right: 0.05em; /* optical balance for wide tracking */
+}
+
+.cta-signal:hover {
+  color: #fff;
+}
+
+.cta-signal:hover .cta-signal__label {
+  letter-spacing: 0.34em;
+}
+
+.cta-signal:hover .cta-signal__rail {
+  width: 52px;
+  background: rgba(255, 255, 255, 0.85);
+}
+
+/* —— Footer —— */
+.site-footer {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 2;
+  background: transparent;
+  padding: 0 1rem 1.1rem;
+  text-align: center;
+  pointer-events: none;
+}
+
+.site-footer p {
+  margin: 0;
+  font-size: 0.8rem;
+  color: rgba(255, 255, 255, 0.4);
+}
+
+@media (min-width: 1025px) {
+  .hero-title:not(.hero-title--sm) {
+    font-size: 200px;
+    line-height: 200px;
+  }
+}
+
+@media (max-width: 1024px) {
+  .hero-title:not(.hero-title--sm) {
+    font-size: 120px;
+    line-height: 120px;
+  }
+}
+
+@media (max-width: 480px) {
+  .hero-title:not(.hero-title--sm) {
+    font-size: min(120px, 28vw);
+    line-height: 1;
+  }
+}
+
+/* ═══════════════════════════════════════════
+   Startup intro
+   Sequence: is-intro → is-intro-beam → is-intro-title → is-intro-ui → is-ready
+
+   Critical anti-flicker rule:
+   is-ready must paint IDENTICALLY to the settled is-intro-ui state.
+   Never flip clip-path inset(0)→none or translate3d(0)→none on the
+   same frame as class cleanup — that forces a compositing/blend flash.
+   ═══════════════════════════════════════════ */
+
+/* Title: clip-path only (no opacity/transform — those kill mix-blend) */
+body.is-intro .hero-title {
+  clip-path: inset(50% 0 50% 0);
+}
+
+body.is-intro-title .hero-title,
+body.is-intro-ui .hero-title,
+body.is-ready .hero-title {
+  /* Keep inset(0) forever after reveal — switching to `none` flickers */
+  clip-path: inset(0 0 0 0);
+}
+
+body.is-intro-title .hero-title {
+  transition: clip-path 1s var(--ease-out-expo);
+}
+
+/* CTA + copy enter */
+body.is-intro .cta-signal,
+body.is-intro .page-copy {
+  opacity: 0;
+  transform: translate3d(0, 16px, 0);
+  pointer-events: none;
+}
+
+body.is-intro-ui .cta-signal,
+body.is-intro-ui .page-copy,
+body.is-ready .cta-signal,
+body.is-ready .page-copy {
+  opacity: 1;
+  /* Keep translate3d(0,0,0) — dropping to `none` flickers mix-blend layers */
+  transform: translate3d(0, 0, 0);
+  pointer-events: auto;
+}
+
+body.is-intro-ui .cta-signal,
+body.is-intro-ui .page-copy {
+  transition:
+    opacity 0.75s var(--ease-out-quart),
+    transform 0.9s var(--ease-out-expo);
+}
+
+body.is-intro-ui .cta-signal {
+  transition-delay: 0.1s;
+}
+
+/* Footer */
+body.is-intro .site-footer {
+  opacity: 0;
+  transform: translate3d(0, 8px, 0);
+}
+
+body.is-intro-ui .site-footer,
+body.is-ready .site-footer {
+  opacity: 1;
+  transform: translate3d(0, 0, 0);
+}
+
+body.is-intro-ui .site-footer {
+  transition:
+    opacity 0.95s ease,
+    transform 0.95s var(--ease-out-quart);
+  transition-delay: 0.2s;
+}
+
+/*
+  Drop only intro-driven transitions on ready.
+  Leave .cta-signal base hover transitions (color / rails) intact.
+*/
+body.is-ready .hero-title,
+body.is-ready .page-copy,
+body.is-ready .site-footer {
+  transition: none;
+  transition-delay: 0s;
+}
+
+body.is-ready .cta-signal {
+  /* keep hover transitions from .cta-signal { transition: color… } */
+  transition-delay: 0s;
+}
+
+/* Don’t fight intro transform mid-flight */
+body.is-intro .cta-signal:hover,
+body.is-intro-ui .cta-signal:hover {
+  transform: translate3d(0, 0, 0);
+}
+
+body.is-intro .cta-signal:hover .cta-signal__label,
+body.is-intro-ui .cta-signal:hover .cta-signal__label {
+  letter-spacing: 0.28em;
+}
+
+body.is-intro .cta-signal:hover .cta-signal__rail,
+body.is-intro-ui .cta-signal:hover .cta-signal__rail {
+  width: 36px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  body.is-intro .hero-title,
+  body.is-intro .cta-signal,
+  body.is-intro .page-copy,
+  body.is-intro .site-footer,
+  body.is-intro-title .hero-title,
+  body.is-intro-ui .hero-title,
+  body.is-intro-ui .cta-signal,
+  body.is-intro-ui .page-copy,
+  body.is-intro-ui .site-footer,
+  body.is-ready .hero-title,
+  body.is-ready .cta-signal,
+  body.is-ready .page-copy,
+  body.is-ready .site-footer {
+    transition: none !important;
+    transition-delay: 0s !important;
+    transform: translate3d(0, 0, 0) !important;
+    clip-path: inset(0 0 0 0) !important;
+  }
+
+  body.is-intro .cta-signal,
+  body.is-intro .page-copy,
+  body.is-intro .site-footer,
+  body.is-intro-ui .cta-signal,
+  body.is-intro-ui .page-copy,
+  body.is-intro-ui .site-footer,
+  body.is-ready .cta-signal,
+  body.is-ready .page-copy,
+  body.is-ready .site-footer {
+    opacity: 1 !important;
+  }
+
+  .fluid-canvas {
+    opacity: 1 !important;
+  }
+}
