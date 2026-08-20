@@ -83,10 +83,12 @@ Keep these working in `nginx.conf` and the Vite plugin in `vite.config.js`.
   device time zone first (so Europe gets EUR), browser language region as backup, then
   `VITE_FOURTHWALL_CURRENCY` or EUR. Never call a geo IP service for this. A guess is
   never written to storage; only an explicit pick is remembered, and it always wins.
-- **Paid Fourthwall links go through the currency gate.** `initShopGate` in `src/app.js`
-  intercepts every link to `br4m-shop.fourthwall.com` (except `/supporters`), opens the
-  globe dialog, and continues to the matching locale built by `localizedShopUrl`:
-  `/en-eur/pages/donations`. That gives visitors their own currency and the payment
-  methods that belong to it, so never hardcode a locale prefix in HTML.
+- **Paid Fourthwall links carry the currency locale.** `initShopLinks` in `src/app.js`
+  rewrites every link to `br4m-shop.fourthwall.com` (except `/supporters`) through
+  `localizedShopUrl`, so a link becomes `/en-eur/pages/donations` and visitors land on
+  their own prices and payment methods. Never hardcode a locale prefix in HTML, and
+  never interrupt the click with a dialog. The support page carries one quiet line
+  (`.split__note` with `[data-shop-currency]`) telling visitors they can change the
+  currency on the shop page if the guess is wrong.
 - Optional: `VITE_FOURTHWALL_CHECKOUT` (host), `VITE_FOURTHWALL_CURRENCY` (default `EUR`).
 - If the token is missing, keep the Shop section and show the empty state. Do not invent products.

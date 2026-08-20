@@ -74,7 +74,7 @@ uppercase, tracking 0.2em+, `--ink-36`. Body max ~52ch.
 | Movie banner | `.pbanner` | Wide banner image, veiled, above movie detail |
 | Entry tiles | `.ep` | 16:9 thumbs; released = link + play disc, upcoming = date chip, TBA = "?" |
 | Dialog player | `[data-player]` | 16:9 modal player for YouTube uploads |
-| Currency globe | `src/globe.js` + `src/landdots.js` + `.orb` | Dot cloud built from **real Natural Earth land polygons** (`world-atlas` land-110m rasterized to a 2.2 degree grid, lazy chunk); the selected currency's countries light up violet and the globe turns toward them. List shows code, name and symbol; scrollable with the wheel (`data-lenis-prevent`). Map is drawn unmirrored (east to the right). The dialog animates open (panel rises + scales in, backdrop fades) and closes through the same motion, including Esc; reduced motion snaps. The starting currency is guessed from the device time zone (language region as backup), so a visitor in Europe lands on EUR without touching anything |
+| Currency globe | `src/globe.js` + `src/landdots.js` + `.orb` | Dot cloud built from **real Natural Earth land polygons** (`world-atlas` land-110m rasterized to a 2.2 degree grid, lazy chunk); the selected currency's countries light up violet and the globe turns toward them. List shows code, name and symbol; scrollable with the wheel (`data-lenis-prevent`). Map is drawn unmirrored (east to the right). The dialog animates open (panel rises + scales in, backdrop fades) and closes through the same motion, including Esc; reduced motion snaps. It only ever opens from the shop's own currency button, never in front of an outgoing link. The starting currency is guessed from the device time zone (language region as backup), so a visitor in Europe lands on EUR without touching anything |
 | Bag | `src/shop.js` + `.sheet` | Count badge, qty stepper, trash remove, subtotal |
 | Membership banner | `.member` | Name + link only, violet glow, star tag |
 | Teasers | `.teaser` | Giant type rows with white sweep + rotating arrow disc |
@@ -102,11 +102,11 @@ Icons: thin 1.5–1.7 stroke SVGs from `ICONS` in `src/ui.js` (and brand glyphs 
   the money-green `$` (`.cash`) and the violet `+` (`.plus` inside the split heading).
   Both idle-sway and **lean toward the pointer**; the CSS gradient spans stay as the
   no-WebGL / pre-load fallback, and reduced motion renders one static angled frame.
-- Clicking a paid Fourthwall link (memberships, donations) opens the currency
-  globe first with a short note, then continues in a new tab to the matching
-  Fourthwall locale, `/en-eur/pages/donations`, so prices and payment methods
-  match the visitor. The choice is remembered like any currency pick. The
-  members feed link is not gated, there is nothing to pay for.
+- Paid Fourthwall links (memberships, donations) point straight at the locale of
+  the current currency, `/en-eur/pages/donations`, so prices and payment methods
+  match the visitor with no popup in the way. Under the two panels one quiet line
+  names the currency and says it can be changed on the shop page if the guess is
+  wrong. The members feed link stays plain, there is nothing to pay for.
 - Fourthwall URLs (link directly, never print a URL as visible text):
   tiers `https://br4m-shop.fourthwall.com/pages/memberships`,
   one-time donations `https://br4m-shop.fourthwall.com/pages/donations`,

@@ -1,5 +1,5 @@
 import gsap from 'gsap'
-import { CURRENCIES, getCurrency, localizedShopUrl, onCurrency, setCurrency } from './currency.js'
+import { CURRENCIES, getCurrency, onCurrency, setCurrency } from './currency.js'
 import { ICONS } from './ui.js'
 import { setPageScrollLocked, reducedMotion } from './motion.js'
 
@@ -136,12 +136,7 @@ async function buildDialog() {
   dialog.innerHTML = `
     <div class="orb__inner" data-lenis-prevent>
       <header class="orb__head">
-        <div>
-          <h2>Currency</h2>
-          <p class="orb__note" data-gate-note hidden>
-            Pick your currency to continue to the shop with the right prices and payment methods.
-          </p>
-        </div>
+        <h2>Currency</h2>
         <button class="icon-btn" type="button" data-close aria-label="Close">${ICONS.close}</button>
       </header>
       <div class="orb__stage">
@@ -164,9 +159,7 @@ async function buildDialog() {
   }
 
   const inner = dialog.querySelector('.orb__inner')
-  const gateNote = dialog.querySelector('[data-gate-note]')
   let closing = false
-  let gateUrl = null
 
   const closeWith = () => {
     if (closing || !dialog.open) return
@@ -201,8 +194,6 @@ async function buildDialog() {
     }
   })
   dialog.addEventListener('close', () => {
-    gateUrl = null
-    gateNote.hidden = true
     renderer?.stop()
     sync()
   })
@@ -211,21 +202,8 @@ async function buildDialog() {
     button.addEventListener('pointerenter', () => renderer?.preview(button.dataset.code))
     button.addEventListener('focus', () => renderer?.preview(button.dataset.code))
     button.addEventListener('click', () => {
-      const code = button.dataset.code
-      setCurrency(code)
-      renderer?.preview(code)
-
-      if (gateUrl) {
-        // Still inside the click gesture, so the new tab is not blocked.
-        const target = localizedShopUrl(gateUrl, code)
-        gateUrl = null
-        const opened = window.open(target, '_blank', 'noopener,noreferrer')
-        if (!opened) {
-          window.location.href = target
-          return
-        }
-      }
-
+      setCurrency(button.dataset.code)
+      renderer?.preview(button.dataset.code)
       setTimeout(closeWith, 750)
     })
   })
@@ -241,9 +219,7 @@ async function buildDialog() {
   })
 
   renderer = createRenderer(dialog.querySelector('[data-orb-canvas]'))
-  dialog.openWith = (gate = null) => {
-    gateUrl = gate
-    gateNote.hidden = !gate
+  dialog.openWith = () => {
     if (!dialog.open) dialog.showModal()
     sync()
     renderer.start()
@@ -383,15 +359,6 @@ function createRenderer(canvas) {
 }
 
 /* ── Trigger ─────────────────────────────────────────────── */
-
-/**
- * Ask for a currency before leaving for the shop, then continue to the
- * matching Fourthwall locale (`/en-eur/pages/donations`).
- */
-export async function openCurrencyGate(url) {
-  const modal = await ensureDialog()
-  modal.openWith(url)
-}
 
 export function mountCurrencyControl(host) {
   if (!host) return

@@ -2,34 +2,53 @@ import './style.css'
 import { initChrome } from './chrome.js'
 import { initCursor } from './cursor.js'
 import { applyReveals, initMagnetic, initMotion, pageReveal, refresh } from './motion.js'
+import { getCurrency, localizedShopUrl, onCurrency } from './currency.js'
 
 const SHOP_HOST = 'br4m-shop.fourthwall.com'
 
+function isPaidShopLink(link) {
+  try {
+    const url = new URL(link.href, window.location.href)
+    return url.hostname === SHOP_HOST && !/\/supporters\/?$/.test(url.pathname)
+  } catch {
+    return false
+  }
+}
+
+/** Point a shop link at the locale of the current currency. */
+function localize(link) {
+  if (!link.dataset.shopUrl) link.dataset.shopUrl = link.href
+  link.href = localizedShopUrl(link.dataset.shopUrl, getCurrency())
+}
+
 /**
- * Anything that can be paid for on Fourthwall (memberships, donations) first
- * asks for a currency, then opens the matching locale so visitors get their
- * own prices and payment methods. The members feed has nothing to pay for,
- * so it stays a direct link.
+ * Memberships and donations open in the Fourthwall locale that matches the
+ * detected currency (`/en-eur/pages/donations`), so visitors land on their own
+ * prices and payment methods without being asked anything first. The members
+ * feed has nothing to pay for, so it stays untouched.
  */
-function initShopGate() {
-  document.addEventListener('click', (event) => {
-    if (event.defaultPrevented || event.button !== 0 || event.metaKey || event.ctrlKey) return
+function initShopLinks() {
+  const paint = () => {
+    document.querySelectorAll(`a[href*="${SHOP_HOST}"]`).forEach((link) => {
+      if (isPaidShopLink(link)) localize(link)
+    })
+    document.querySelectorAll('[data-shop-currency]').forEach((node) => {
+      node.textContent = getCurrency()
+    })
+  }
 
-    const link = event.target.closest?.('a[href]')
-    if (!link) return
+  paint()
+  onCurrency(paint)
 
-    let url
-    try {
-      url = new URL(link.href, window.location.href)
-    } catch {
-      return
-    }
-    if (url.hostname !== SHOP_HOST) return
-    if (/\/supporters\/?$/.test(url.pathname)) return
-
-    event.preventDefault()
-    import('./globe.js').then(({ openCurrencyGate }) => openCurrencyGate(link.href))
-  })
+  // Safety net for links injected after boot.
+  document.addEventListener(
+    'click',
+    (event) => {
+      const link = event.target.closest?.(`a[href*="${SHOP_HOST}"]`)
+      if (link && isPaidShopLink(link)) localize(link)
+    },
+    true,
+  )
 }
 
 /**
@@ -39,8 +58,8 @@ function initShopGate() {
 export function startApp(mount) {
   const boot = async () => {
     initChrome()
-    initShopGate()
     mount?.()
+    initShopLinks()
     initMotion()
     initCursor()
     await pageReveal()

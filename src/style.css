@@ -2232,6 +2232,23 @@ ul li:first-child .chan {
   position: relative;
 }
 
+.split__note {
+  max-width: 60ch;
+  margin: var(--gap-md) auto 0;
+  font-size: 0.8125rem;
+  line-height: 1.6;
+  color: var(--ink-52);
+  text-align: center;
+  text-wrap: pretty;
+}
+
+.split__note [data-shop-currency] {
+  font-family: var(--font-mono);
+  font-size: 0.9em;
+  letter-spacing: 0.04em;
+  color: var(--ink-70);
+}
+
 .btn--cash.btn--solid {
   background: var(--cash);
   border-color: var(--cash);
@@ -2513,19 +2530,11 @@ ul li:first-child .chan {
 .orb__head {
   grid-area: head;
   display: flex;
-  align-items: flex-start;
+  align-items: center;
   justify-content: space-between;
   gap: var(--gap-md);
   padding-bottom: var(--gap-sm);
   border-bottom: 1px solid var(--line-soft);
-}
-
-.orb__note {
-  max-width: 44ch;
-  margin-top: 0.35rem;
-  font-size: 0.8125rem;
-  line-height: 1.5;
-  color: var(--ink-52);
 }
 
 .orb__head h2 {
