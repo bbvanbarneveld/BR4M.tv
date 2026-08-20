@@ -79,5 +79,10 @@ Keep these working in `nginx.conf` and the Vite plugin in `vite.config.js`.
 - The currency switcher is the dot-globe dialog in `src/globe.js` (real world land map,
   countries light up per currency); supported codes and symbols live in
   `src/currency.js` (popular four first, rest alphabetical).
+- **Paid Fourthwall links go through the currency gate.** `initShopGate` in `src/app.js`
+  intercepts every link to `br4m-shop.fourthwall.com` (except `/supporters`), opens the
+  globe dialog, and continues to the matching locale built by `localizedShopUrl`:
+  `/en-eur/pages/donations`. That gives visitors their own currency and the payment
+  methods that belong to it, so never hardcode a locale prefix in HTML.
 - Optional: `VITE_FOURTHWALL_CHECKOUT` (host), `VITE_FOURTHWALL_CURRENCY` (default `EUR`).
 - If the token is missing, keep the Shop section and show the empty state. Do not invent products.

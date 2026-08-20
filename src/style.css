@@ -2513,11 +2513,19 @@ ul li:first-child .chan {
 .orb__head {
   grid-area: head;
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   justify-content: space-between;
   gap: var(--gap-md);
   padding-bottom: var(--gap-sm);
   border-bottom: 1px solid var(--line-soft);
+}
+
+.orb__note {
+  max-width: 44ch;
+  margin-top: 0.35rem;
+  font-size: 0.8125rem;
+  line-height: 1.5;
+  color: var(--ink-52);
 }
 
 .orb__head h2 {

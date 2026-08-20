@@ -63,6 +63,25 @@ export function onCurrency(handler) {
   window.addEventListener(EVENT, (event) => handler(event.detail?.code || current))
 }
 
+/**
+ * Fourthwall serves a locale per currency, so a shop link becomes
+ * `/en-eur/pages/donations`. That gives visitors their own currency and the
+ * payment methods that belong to it.
+ */
+export function localizedShopUrl(url, code = getCurrency()) {
+  const locale = `en-${String(code || '').toLowerCase()}`
+  if (!/^en-[a-z]{3}$/.test(locale)) return url
+  try {
+    const next = new URL(url, window.location.origin)
+    next.pathname = /^\/en-[a-z]{3}(\/|$)/.test(next.pathname)
+      ? next.pathname.replace(/^\/en-[a-z]{3}/, `/${locale}`)
+      : `/${locale}${next.pathname}`
+    return next.toString()
+  } catch {
+    return url
+  }
+}
+
 export function formatMoney(amount, currency = getCurrency()) {
   const value = Number(amount)
   if (!Number.isFinite(value)) return ''

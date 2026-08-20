@@ -102,6 +102,11 @@ Icons: thin 1.5–1.7 stroke SVGs from `ICONS` in `src/ui.js` (and brand glyphs 
   the money-green `$` (`.cash`) and the violet `+` (`.plus` inside the split heading).
   Both idle-sway and **lean toward the pointer**; the CSS gradient spans stay as the
   no-WebGL / pre-load fallback, and reduced motion renders one static angled frame.
+- Clicking a paid Fourthwall link (memberships, donations) opens the currency
+  globe first with a short note, then continues in a new tab to the matching
+  Fourthwall locale, `/en-eur/pages/donations`, so prices and payment methods
+  match the visitor. The choice is remembered like any currency pick. The
+  members feed link is not gated, there is nothing to pay for.
 - Fourthwall URLs (link directly, never print a URL as visible text):
   tiers `https://br4m-shop.fourthwall.com/pages/memberships`,
   one-time donations `https://br4m-shop.fourthwall.com/pages/donations`,
