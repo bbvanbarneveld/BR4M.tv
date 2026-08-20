@@ -34,13 +34,106 @@ function fallback() {
   return CODES.has(env) ? env : 'EUR'
 }
 
+/* Country to currency, limited to the currencies this site supports. */
+const BY_COUNTRY = {
+  AD: 'EUR', AT: 'EUR', BE: 'EUR', CY: 'EUR', DE: 'EUR', EE: 'EUR', ES: 'EUR',
+  FI: 'EUR', FR: 'EUR', GR: 'EUR', HR: 'EUR', IE: 'EUR', IT: 'EUR', LT: 'EUR',
+  LU: 'EUR', LV: 'EUR', MC: 'EUR', ME: 'EUR', MT: 'EUR', NL: 'EUR', PT: 'EUR',
+  SI: 'EUR', SK: 'EUR', SM: 'EUR', VA: 'EUR', XK: 'EUR',
+  GB: 'GBP', GG: 'GBP', IM: 'GBP', JE: 'GBP',
+  US: 'USD', AU: 'AUD', BR: 'BRL', CA: 'CAD', CH: 'CHF', LI: 'CHF',
+  DK: 'DKK', FO: 'DKK', GL: 'DKK', IN: 'INR', JP: 'JPY', MX: 'MXN',
+  MY: 'MYR', NO: 'NOK', SJ: 'NOK', NZ: 'NZD', PL: 'PLN', SE: 'SEK', SG: 'SGD',
+}
+
+/* Time zones that differ from their region's default currency. */
+const BY_ZONE = {
+  'Europe/London': 'GBP',
+  'Europe/Belfast': 'GBP',
+  'Europe/Guernsey': 'GBP',
+  'Europe/Isle_of_Man': 'GBP',
+  'Europe/Jersey': 'GBP',
+  'Europe/Copenhagen': 'DKK',
+  'Europe/Oslo': 'NOK',
+  'Europe/Stockholm': 'SEK',
+  'Europe/Warsaw': 'PLN',
+  'Europe/Zurich': 'CHF',
+  'Europe/Busingen': 'CHF',
+  'Europe/Vaduz': 'CHF',
+  'Atlantic/Faroe': 'DKK',
+  'America/Toronto': 'CAD',
+  'America/Vancouver': 'CAD',
+  'America/Edmonton': 'CAD',
+  'America/Winnipeg': 'CAD',
+  'America/Halifax': 'CAD',
+  'America/St_Johns': 'CAD',
+  'America/Regina': 'CAD',
+  'America/Montreal': 'CAD',
+  'America/Mexico_City': 'MXN',
+  'America/Tijuana': 'MXN',
+  'America/Monterrey': 'MXN',
+  'America/Cancun': 'MXN',
+  'America/Sao_Paulo': 'BRL',
+  'America/Bahia': 'BRL',
+  'America/Fortaleza': 'BRL',
+  'America/Manaus': 'BRL',
+  'America/Recife': 'BRL',
+  'Asia/Tokyo': 'JPY',
+  'Asia/Kolkata': 'INR',
+  'Asia/Calcutta': 'INR',
+  'Asia/Kuala_Lumpur': 'MYR',
+  'Asia/Kuching': 'MYR',
+  'Asia/Singapore': 'SGD',
+  'Pacific/Auckland': 'NZD',
+  'Pacific/Chatham': 'NZD',
+}
+
+/* Broad region defaults, used when the exact zone is not listed. */
+const BY_REGION = {
+  Europe: 'EUR',
+  America: 'USD',
+  Australia: 'AUD',
+}
+
+/**
+ * Best guess at the visitor's currency, so a visitor in Europe sees euros
+ * without touching the switcher. The device time zone is the location signal;
+ * the browser language region is the backup. Everything is read locally, no
+ * geo lookup, and an explicit pick always wins over this guess.
+ */
+export function detectCurrency() {
+  try {
+    const zone = Intl.DateTimeFormat().resolvedOptions().timeZone || ''
+    if (BY_ZONE[zone] && CODES.has(BY_ZONE[zone])) return BY_ZONE[zone]
+
+    const region = BY_REGION[zone.split('/')[0]]
+    if (region && CODES.has(region)) return region
+  } catch {
+    // Intl unavailable
+  }
+
+  const tags = navigator.languages?.length ? navigator.languages : [navigator.language]
+  for (const tag of tags) {
+    const country = String(tag || '')
+      .split('-')
+      .pop()
+      .toUpperCase()
+    const code = BY_COUNTRY[country]
+    if (code && CODES.has(code)) return code
+  }
+
+  return fallback()
+}
+
 let current = (() => {
   try {
     const stored = String(localStorage.getItem(KEY) || '').toUpperCase()
-    return CODES.has(stored) ? stored : fallback()
+    if (CODES.has(stored)) return stored
   } catch {
-    return fallback()
+    // private mode
   }
+  // Nothing chosen yet: guess, but do not store it, so the guess can improve.
+  return detectCurrency()
 })()
 
 export function getCurrency() {

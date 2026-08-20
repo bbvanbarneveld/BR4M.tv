@@ -79,6 +79,10 @@ Keep these working in `nginx.conf` and the Vite plugin in `vite.config.js`.
 - The currency switcher is the dot-globe dialog in `src/globe.js` (real world land map,
   countries light up per currency); supported codes and symbols live in
   `src/currency.js` (popular four first, rest alphabetical).
+- **The starting currency is detected locally** by `detectCurrency` in `src/currency.js`:
+  device time zone first (so Europe gets EUR), browser language region as backup, then
+  `VITE_FOURTHWALL_CURRENCY` or EUR. Never call a geo IP service for this. A guess is
+  never written to storage; only an explicit pick is remembered, and it always wins.
 - **Paid Fourthwall links go through the currency gate.** `initShopGate` in `src/app.js`
   intercepts every link to `br4m-shop.fourthwall.com` (except `/supporters`), opens the
   globe dialog, and continues to the matching locale built by `localizedShopUrl`:
