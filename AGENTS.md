@@ -27,11 +27,12 @@ Keep these working in `nginx.conf` and the Vite plugin in `vite.config.js`.
 
 ## Site structure
 
-- Multi-page: `/` (home), `/movies`, `/shop`, `/donate`. Clean URLs come from nginx
+- Multi-page: `/` (home), `/movies`, `/shop`, `/donate`, `/press`. Clean URLs come from nginx
   `try_files $uri $uri.html` and the `br4m-routes` plugin in `vite.config.js`. Keep both in sync.
-  Legacy `/watch` and `/projects` redirect to `/movies`.
+  Legacy `/watch` and `/projects` redirect to `/movies`. Unknown paths serve `404.html`.
 - Movies and releases are data-driven from `src/data/projects.js` (posters, banners, hero art,
-  release instants, premiere URLs). Movie detail routes via hash: `/movies#the-architects`.
+  release instants, premiere URLs). Movie detail routes are real paths: `/movies/the-architects`.
+  Legacy hashes (`/movies#the-architects`) rewrite to that path.
 - The YouTube gallery lives on the homepage only (newest upload); there is no separate videos page.
 - The site is about **BR4M** the filmmaker. THE ARCHITECTS is one series among more to come —
   never frame the whole site around a single series.

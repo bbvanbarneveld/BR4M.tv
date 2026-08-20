@@ -1,10 +1,12 @@
 import gsap from 'gsap'
 import { PROJECTS, featuredRelease, projectBySlug } from './data/projects.js'
+import { moviePath, movieSlugFromLocation } from './site.js'
 import { mountCountdown, phaseOf, releaseStamp } from './countdown.js'
+import { calendarActionHtml, liveSubtitle, releaseActionHtml, youtubeReminderHtml } from './release.js'
+import { bindCalendarDownload } from './calendar.js'
 import { mountReel } from './reel.js'
 import { ICONS, escapeHtml } from './ui.js'
 import { applyReveals, initMagnetic, reducedMotion, refresh } from './motion.js'
-import { YOUTUBE_URL } from './youtube-feed.js'
 
 let stoppers = []
 let activeReel = null
@@ -14,15 +16,16 @@ function stopTimers() {
   stoppers = []
 }
 
-function releaseActions(entry, phase) {
-  if (phase === 'live') {
-    const href = entry.url || YOUTUBE_URL
-    return `<a class="btn btn--solid" href="${escapeHtml(href)}" target="_blank" rel="noopener noreferrer" data-magnetic>Watch now</a>`
+function currentSlug() {
+  return movieSlugFromLocation(window.location.pathname, window.location.hash)
+}
+
+function adoptHashRoute() {
+  if (window.location.pathname.replace(/\/+$/, '') !== '/movies') return
+  const hash = window.location.hash.replace(/^#/, '')
+  if (hash && projectBySlug(hash)) {
+    history.replaceState(null, '', moviePath(hash))
   }
-  if (phase === 'soon' && entry.url) {
-    return `<a class="btn btn--solid" href="${escapeHtml(entry.url)}" target="_blank" rel="noopener noreferrer" data-magnetic>Go to the premiere</a>`
-  }
-  return `<button class="btn" type="button" disabled>Premiere not available yet</button>`
 }
 
 /* ── Featured hero ───────────────────────────────────────── */
@@ -43,7 +46,7 @@ function renderFeature() {
     <div class="feature__reel" data-reel aria-hidden="true"></div>
     <div class="feature__veil" aria-hidden="true"></div>
     <div class="feature__inner">
-      <p class="label" data-load>${live ? 'Out now' : 'Next premiere'}</p>
+      <p class="label" data-load data-feature-label>${live ? 'Out now' : 'Next premiere'}</p>
       <h1 class="feature__title" data-load>${escapeHtml(project.title)}</h1>
       <p class="feature__meta" data-load>
         <span>${year}</span>
@@ -52,21 +55,38 @@ function renderFeature() {
         <i></i>
         <span>${escapeHtml(entry.title)}</span>
       </p>
-      <p class="feature__sub" data-load>
+      <p class="feature__sub" data-load data-feature-sub>
         ${live ? `${escapeHtml(entry.title)} is out now.` : `Premieres ${releaseStamp(entry.release)}.`}
       </p>
       <div class="feature__cd" data-load data-feature-cd></div>
       <div class="feature__actions" data-load>
         <span data-feature-actions></span>
+        <span data-feature-calendar>${live ? '' : calendarActionHtml()}</span>
         <a class="btn" href="#movies" data-magnetic>All movies</a>
       </div>
     </div>
   `
 
   const actions = host.querySelector('[data-feature-actions]')
+  const calendar = host.querySelector('[data-feature-calendar]')
+  const label = host.querySelector('[data-feature-label]')
+  const sub = host.querySelector('[data-feature-sub]')
+
   const paintActions = (phase) => {
-    actions.innerHTML = releaseActions(entry, phase)
+    if (label) label.textContent = phase === 'live' ? 'Out now' : 'Next premiere'
+    if (sub) {
+      sub.textContent =
+        phase === 'live'
+          ? liveSubtitle(entry)
+          : `Premieres ${releaseStamp(entry.release)}.`
+    }
+    actions.innerHTML = `${releaseActionHtml(entry, phase)}${phase !== 'live' ? youtubeReminderHtml(entry) : ''}`
+    if (calendar) {
+      calendar.innerHTML = phase === 'live' ? '' : calendarActionHtml()
+      bindCalendarDownload(calendar, featured)
+    }
     initMagnetic(actions)
+    initMagnetic(calendar)
   }
 
   stoppers.push(
@@ -118,7 +138,7 @@ function renderGrid() {
 
   host.innerHTML = PROJECTS.map(
     (project) => `
-      <a class="card" href="#${escapeHtml(project.slug)}" data-hint="Open">
+      <a class="card" href="${escapeHtml(moviePath(project.slug))}" data-hint="Open">
         <span class="card__poster">
           <img src="${escapeHtml(project.poster)}" alt="" width="600" height="900" loading="lazy" />
         </span>
@@ -138,21 +158,19 @@ function entryTile(entry) {
       <article class="ep ep--tba">
         <span class="ep__still"><span class="ep__q" aria-hidden="true">?</span></span>
         <span class="ep__row">
-          <span class="ep__name">${escapeHtml(entry.title)}</span>
-          <span class="ep__meta">To be announced</span>
+          <span class="ep__name">To be announced</span>
+          <span class="ep__meta">Date not set</span>
         </span>
       </article>
     `
   }
 
   const phase = phaseOf(entry.release)
-  const linked = (phase === 'live' && (entry.url || YOUTUBE_URL)) || (phase === 'soon' && entry.url)
-  const href = phase === 'live' ? entry.url || YOUTUBE_URL : entry.url
+  const href = entry.url
+  const linked = Boolean(href) && (phase === 'live' || phase === 'soon')
   const meta =
-    phase === 'live'
-      ? 'Out now'
-      : `Premieres ${releaseStamp(entry.release)}`
-  const tag = phase === 'live' ? ICONS.play : ''
+    phase === 'live' ? (href ? 'Out now' : 'Watch link not posted yet') : `Premieres ${releaseStamp(entry.release)}`
+  const tag = phase === 'live' && href ? ICONS.play : ''
 
   const inner = `
     <span class="ep__still">
@@ -181,10 +199,10 @@ function renderDetail(project) {
       <div class="pbanner__veil" aria-hidden="true"></div>
     </div>
     <div class="shell pdetail">
-      <button class="ulink pdetail__back" type="button" data-back>
+      <a class="ulink pdetail__back" href="/movies">
         <svg viewBox="0 0 24 24" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.7" d="M17 17H7V7M17 7L7 17"/></svg>
         All movies
-      </button>
+      </a>
       <header class="pdetail__head">
         <p class="label">${escapeHtml(project.tag)}</p>
         <h1 class="pdetail__title">${escapeHtml(project.title)}</h1>
@@ -195,10 +213,6 @@ function renderDetail(project) {
       </div>
     </div>
   `
-
-  host.querySelector('[data-back]')?.addEventListener('click', () => {
-    window.location.hash = ''
-  })
 }
 
 /* ── View switching ──────────────────────────────────────── */
@@ -216,7 +230,7 @@ function show(el, visible) {
 }
 
 function route() {
-  const slug = window.location.hash.replace('#', '')
+  const slug = currentSlug()
   const project = projectBySlug(slug)
   const feature = document.querySelector('[data-feature]')
   const home = document.querySelector('[data-projects-home]')
@@ -241,9 +255,14 @@ function route() {
 }
 
 export function mountProjects() {
+  adoptHashRoute()
   renderFeature()
   renderGrid()
-  window.addEventListener('hashchange', route)
+  window.addEventListener('popstate', route)
+  window.addEventListener('hashchange', () => {
+    adoptHashRoute()
+    route()
+  })
   route()
   applyReveals(document)
   initMagnetic(document)
