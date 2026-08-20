@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-  <url><loc>https://br4m.tv/</loc></url>
-  <url><loc>https://br4m.tv/movies</loc></url>
-  <url><loc>https://br4m.tv/shop</loc></url>
-  <url><loc>https://br4m.tv/donate</loc></url>
+  <url><loc>https://br4m.tv/</loc><lastmod>2026-08-20</lastmod></url>
+  <url><loc>https://br4m.tv/movies</loc><lastmod>2026-08-20</lastmod></url>
+  <url><loc>https://br4m.tv/movies/the-architects</loc><lastmod>2026-08-20</lastmod></url>
+  <url><loc>https://br4m.tv/shop</loc><lastmod>2026-08-20</lastmod></url>
+  <url><loc>https://br4m.tv/donate</loc><lastmod>2026-08-20</lastmod></url>
+  <url><loc>https://br4m.tv/press</loc><lastmod>2026-08-20</lastmod></url>
 </urlset>

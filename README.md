@@ -8,12 +8,16 @@ film stills as heroes, letterbox page reveals, film grain, a live CET clock.
 
 | URL | File | Content |
 | --- | --- | --- |
-| `/` | `index.html` | Poster hero (latest still), about BR4M, newest upload, current series, BR4M+, teasers, channels |
-| `/movies` | `movies.html` | Netflix-style wall: featured premiere with countdown, posters, movie detail with banner and slots |
+| `/` | `index.html` | Lightning wordmark, premiere countdown, newest upload, about, BR4M+, teasers, channels |
+| `/movies` | `movies.html` | Featured premiere with countdown, posters, movie detail |
+| `/movies/:slug` | `movies.html` | Same page, path-routed detail. Build also emits `movies/:slug.html` for share tags |
 | `/shop` | `shop.html` | Fourthwall catalog, currency globe, bag, checkout |
 | `/donate` | `donate.html` | BR4M+ membership, one-time donations, Discord |
+| `/press` | `press.html` | Logline, premiere stamp, downloadable stills |
+| (unknown) | `404.html` | Not-found page. nginx does not fall back to home |
 
-Legacy `/watch` and `/projects` redirect to `/movies`.
+Legacy `/watch` and `/projects` redirect to `/movies`. Legacy `/movies#slug` rewrites to
+`/movies/slug`.
 
 Design rules live in `DESIGN.md`; keep it in sync with every change.
 
@@ -64,7 +68,11 @@ public Storefront API, and checkout is always hosted by Fourthwall.
 | File | Role |
 | --- | --- |
 | `src/app.js` | Shared page boot (chrome, motion, cursor, letterbox reveal) |
-| `src/main.js` / `src/movies-page.js` / `src/shop-page.js` / `src/page.js` | Page entries |
+| `src/main.js` / `src/projects-page.js` / `src/shop-page.js` / `src/page.js` | Page entries |
+| `src/premiere.js` | Homepage premiere band (countdown, calendar, film link) |
+| `src/release.js` | Shared premiere / watch button markup |
+| `src/calendar.js` | `.ics` for the next premiere |
+| `src/site.js` | Live origin and movie paths |
 | `src/bolt.js` | Hero lightning: WebGL fragment-shader glow (2D canvas fallback) |
 | `src/reel.js` | YouTube background reel for hero sections |
 | `src/cash3d.js` | Real 3D extruded `$` and `+` glyphs (Three.js, pointer-reactive, lazy on the donate page) |

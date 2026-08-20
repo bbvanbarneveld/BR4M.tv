@@ -6,49 +6,28 @@
       name="viewport"
       content="width=device-width, initial-scale=1, maximum-scale=5, viewport-fit=cover"
     />
-    <title>BR4M Movies</title>
-    <meta
-      name="description"
-      content="Every BR4M movie and series made inside Minecraft, with release dates and premieres. The First Word premieres 30.08.2026 at 15:00 CEST."
-    />
-    <link rel="canonical" href="https://br4m.tv/movies" />
-    <meta property="og:title" content="BR4M Movies" />
-    <meta
-      property="og:description"
-      content="Every BR4M movie and series made inside Minecraft, with release dates and premieres. The First Word premieres 30.08.2026 at 15:00 CEST."
-    />
+    <title>Page not found, BR4M</title>
+    <meta name="description" content="This page is not on the site." />
+    <meta name="robots" content="noindex" />
+    <link rel="canonical" href="https://br4m.tv/404" />
+    <meta property="og:title" content="Page not found, BR4M" />
+    <meta property="og:description" content="This page is not on the site." />
     <meta property="og:type" content="website" />
-    <meta property="og:url" content="https://br4m.tv/movies" />
+    <meta property="og:url" content="https://br4m.tv/404" />
     <meta property="og:image" content="https://br4m.tv/share.jpg" />
     <meta property="og:image:width" content="1200" />
     <meta property="og:image:height" content="630" />
     <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:title" content="BR4M Movies" />
-    <meta
-      name="twitter:description"
-      content="Every BR4M movie and series made inside Minecraft, with release dates and premieres. The First Word premieres 30.08.2026 at 15:00 CEST."
-    />
+    <meta name="twitter:title" content="Page not found, BR4M" />
+    <meta name="twitter:description" content="This page is not on the site." />
     <meta name="twitter:image" content="https://br4m.tv/share.jpg" />
-    <script type="application/ld+json">
-      {
-        "@context": "https://schema.org",
-        "@type": "Movie",
-        "name": "The First Word",
-        "isPartOf": { "@type": "MovieSeries", "name": "The Architects" },
-        "description": "Three command blocks. Three hidden locations. Whoever holds all three can rewrite the world.",
-        "image": "https://br4m.tv/projects/the-architects-poster.png",
-        "datePublished": "2026-08-30T15:00:00+02:00",
-        "url": "https://br4m.tv/movies/the-architects"
-      }
-    </script>
     <meta name="theme-color" content="#000000" />
     <link rel="icon" href="/logo.png" type="image/png" />
     <link rel="apple-touch-icon" href="/logo.png" />
-    <link rel="preload" as="image" href="/projects/the-architects-hero.png" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
-      href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Climate+Crisis&family=Inter+Tight:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500;700&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Climate+Crisis&family=Inter+Tight:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500;700&display=swap"
       rel="stylesheet"
     />
     <script>
@@ -100,7 +79,7 @@
       <span class="timecode topbar__clock" data-clock></span>
 
       <nav class="topbar__nav" aria-label="Pages">
-        <a class="ulink" href="/movies" aria-current="page">Movies</a>
+        <a class="ulink" href="/movies">Movies</a>
         <a class="ulink" href="/shop">Shop</a>
         <a class="ulink" href="/donate">Support</a>
       </nav>
@@ -128,25 +107,19 @@
     </nav>
 
     <main id="main">
-      <section class="feature" data-feature></section>
-
-      <section class="band--tight band-bottom shell" id="movies" data-projects-home>
-        <header class="sec-head">
-          <div>
-            <p class="label" data-reveal>Movies</p>
-            <h2 class="sec-head__title" data-split>Series and films</h2>
+      <header class="page-hero shell">
+        <div class="lost">
+          <p class="lost__code" data-load>404</p>
+          <h1 class="page-title" data-load>This page is not on the site.</h1>
+          <p class="page-hero__note" data-load>
+            It may have moved, or the link was never here. The films still are.
+          </p>
+          <div class="lost__actions" data-load>
+            <a class="btn btn--solid" href="/" data-magnetic>Home</a>
+            <a class="btn" href="/movies" data-magnetic>Movies</a>
           </div>
-          <div class="sec-head__aside">
-            <p class="sec-head__note" data-reveal>
-              Every world BR4M is building. More movies join this wall over time.
-            </p>
-          </div>
-        </header>
-
-        <div class="cards" data-cards data-reveal data-reveal-stagger></div>
-      </section>
-
-      <section data-project-detail hidden></section>
+        </div>
+      </header>
     </main>
 
     <footer class="foot">
@@ -156,6 +129,7 @@
         <div class="foot__grid">
           <div class="foot__col" data-reveal data-reveal-stagger>
             <h3>Pages</h3>
+            <a href="/movies">Movies</a>
             <a href="/">Home</a>
             <a href="/shop">Shop</a>
             <a href="/donate">Support</a>
@@ -184,6 +158,6 @@
       </div>
     </footer>
 
-    <script type="module" src="/src/projects-page.js"></script>
+    <script type="module" src="/src/page.js"></script>
   </body>
 </html>

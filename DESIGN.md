@@ -67,7 +67,8 @@ uppercase, tracking 0.2em+, `--ink-36`. Body max ~52ch.
 | Component | File | Notes |
 | --- | --- | --- |
 | Void hero | `index.html` + `.void` + `src/bolt.js` | Pure black, everything centered. **Hovering the wordmark makes electricity crackle across the letters** (small arcs every ~95ms + `.is-live` glow); ambient bolts still strike every 4 to 8s. Text flashes with strikes (`.is-struck`), pulsing violet glow behind. No background image. Rendered by a **WebGL fragment shader** (per-pixel distance to the bolt polylines, white-hot exponential core + wide violet halo); a small 2D-canvas path exists only as a no-WebGL fallback |
-| Featured hero | `.feature` (movies) + `src/reel.js` | Netflix-style: Bebas Neue title, meta dot row (year, tag, entry), countdown, phase actions. Hero art (subtle drift) is the poster frame; once the muted YouTube reel plays it crossfades in and loops from `reelStart` to the end. Sound only via the corner toggle. Reel id lives in `src/data/projects.js` (swap for the trailer later) |
+| Featured hero | `.feature` (movies) + `src/reel.js` | Netflix-style: Bebas Neue title, meta dot row (year, tag, entry), countdown, phase actions, calendar download. Hero art (subtle drift) is the poster frame; once the muted YouTube reel plays it crossfades in and loops from `reelStart` to the end. Sound only via the corner toggle. Reel id lives in `src/data/projects.js` (swap for the trailer later) |
+| Homepage premiere | `.premiere` + `src/premiere.js` | Compact feature band on the homepage: still, film title, countdown, Open the film, Add to calendar. Premiere and watch buttons stay disabled until `url` is set. Never fall back to the channel. |
 | Latest upload row | `.latest` (homepage) + `src/watch.js` | Compact hairline row: 16:9 thumb, label + title + date, play disc. Opens the dialog player |
 | Countdown | `src/countdown.js` + `.cd` | Mono digits; each tick crossfades: old value blurs up and out while the new one blurs in from below (700ms). Colons are transparent white with a soft pulse, never violet. Phases far/soon/live |
 | Poster wall | `.cards` | 2:3 posters, hover lift −6px + zoom, meta row underneath |
@@ -79,6 +80,8 @@ uppercase, tracking 0.2em+, `--ink-36`. Body max ~52ch.
 | Membership banner | `.member` | Name + link only, violet glow, star tag |
 | Teasers | `.teaser` | Giant type rows with white sweep + rotating arrow disc |
 | Channels | `.chan` | Brand icon rows with white sweep |
+| Press kit | `.kit` + `/press` | Hairline download rows for existing stills only. Footer link, not top nav |
+| Lost page | `.lost` + `404.html` | Quiet not-found. nginx and the Vite plugin serve it for unknown paths |
 
 Icons: thin 1.5–1.7 stroke SVGs from `ICONS` in `src/ui.js` (and brand glyphs in
 `src/socials.js`). Never emojis.
@@ -119,12 +122,22 @@ Icons: thin 1.5–1.7 stroke SVGs from `ICONS` in `src/ui.js` (and brand glyphs 
   `url` (YouTube).
 - Premiere flow: greyed "Premiere not available yet" button until 24h before release
   ("far"), premiere link appears in the last 24h if `url` is set ("soon"), watch link
-  only after release ("live").
+  only after release ("live") and only if `url` is set. A missing URL never falls back
+  to the channel. Untitled TBA slots render as "To be announced", do not invent titles.
 - Paste the YouTube premiere URL into the entry's `url` field as soon as it exists.
-- The movies page routes with the URL hash (`/movies#the-architects`); legacy `/watch`
-  and `/projects` redirect to `/movies` (nginx + Vite plugin).
+  "Add to calendar" writes `/premiere.ics` from that same release instant (one-hour
+  reminder window, not a claimed runtime). "Set a YouTube reminder" only appears when
+  `url` is set.
+- Movie detail is a real path (`/movies/the-architects`). Legacy `/movies#the-architects`
+  rewrites there. `/watch` and `/projects` redirect to `/movies` (nginx + Vite plugin).
+- Press (`/press`) lists only existing stills and the real logline and premiere stamp.
+  Footer only, not top nav.
+- Unknown URLs serve `404.html` (nginx `=404`, Vite plugin in preview). Do not fall
+  back to the homepage.
+- Share cards use `https://br4m.tv/share.jpg` (1200×630 crop of the current hero still),
+  plus `og:url`, canonical, and Twitter large-image tags on every page.
 - Shop empty state copy: "Merch is in the works. The first official BR4M drop lands
-  here soon."
+  here soon." Homepage shop teaser uses the same honest line, not a shipping promise.
 
 ## Imagery specs
 
@@ -134,7 +147,8 @@ Icons: thin 1.5–1.7 stroke SVGs from `ICONS` in `src/ui.js` (and brand glyphs 
 | Project banner | ~4:1 | 2048×512 or larger |
 | Entry thumbnail | 16:9 | 1280×720 (YouTube size) |
 | Featured hero background (movies page) | 16:9 | **2560×1440**, keep faces/subject in the middle 60%, bottom third gets a dark gradient overlay. Current: `the-architects-hero.png` |
-| Home hero | none | No image: black + lightning. The series banner still pulls a YouTube maxres still |
+| Home hero | none | No image: black + lightning |
+| Share card | 1.91:1 | **1200×630**, `public/share.jpg`, cropped from the current hero still |
 
 Files live in `public/projects/` and are referenced from `src/data/projects.js`.
 

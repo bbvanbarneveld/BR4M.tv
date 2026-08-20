@@ -14,13 +14,51 @@
     <meta name="theme-color" content="#000000" />
     <link rel="icon" href="/logo.png" type="image/png" />
     <link rel="apple-touch-icon" href="/logo.png" />
+    <link rel="canonical" href="https://br4m.tv/" />
     <meta property="og:title" content="BR4M, Cinematic Minecraft" />
     <meta
       property="og:description"
-      content="Original series, written, built and filmed inside Minecraft."
+      content="Original series, written, built and filmed inside Minecraft. The First Word premieres 30.08.2026 at 15:00 CEST."
     />
     <meta property="og:type" content="website" />
-    <meta property="og:image" content="/logo.png" />
+    <meta property="og:url" content="https://br4m.tv/" />
+    <meta property="og:image" content="https://br4m.tv/share.jpg" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="BR4M, Cinematic Minecraft" />
+    <meta
+      name="twitter:description"
+      content="Original series, written, built and filmed inside Minecraft. The First Word premieres 30.08.2026 at 15:00 CEST."
+    />
+    <meta name="twitter:image" content="https://br4m.tv/share.jpg" />
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@graph": [
+          {
+            "@type": "Organization",
+            "name": "BR4M",
+            "url": "https://br4m.tv",
+            "logo": "https://br4m.tv/logo.png",
+            "sameAs": [
+              "https://www.youtube.com/@br4mtv",
+              "https://discord.gg/Unb7Y2GxNT",
+              "https://www.tiktok.com/@br4m.tv"
+            ]
+          },
+          {
+            "@type": "Movie",
+            "name": "The First Word",
+            "isPartOf": { "@type": "MovieSeries", "name": "The Architects" },
+            "description": "Three command blocks. Three hidden locations. Whoever holds all three can rewrite the world.",
+            "image": "https://br4m.tv/projects/the-architects-poster.png",
+            "datePublished": "2026-08-30T15:00:00+02:00",
+            "url": "https://br4m.tv/movies/the-architects"
+          }
+        ]
+      }
+    </script>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link rel="preconnect" href="https://i.ytimg.com" crossorigin />
@@ -119,7 +157,30 @@
           </div>
         </div>
 
-        <a class="hero-scroll void__scroll" href="#latest" data-load><i></i>Scroll</a>
+        <a class="hero-scroll void__scroll" href="#premiere" data-load><i></i>Scroll</a>
+      </section>
+
+      <section class="premiere" id="premiere" data-premiere>
+        <div class="premiere__media" aria-hidden="true">
+          <img src="/projects/the-architects-hero.png" alt="" width="1280" height="720" />
+        </div>
+        <div class="premiere__veil" aria-hidden="true"></div>
+        <div class="premiere__inner">
+          <p class="label">Next premiere</p>
+          <h2 class="premiere__title">The First Word</h2>
+          <p class="premiere__meta">
+            <span>The Architects</span>
+            <i></i>
+            <span>Scripted trilogy</span>
+            <i></i>
+            <span>2026</span>
+          </p>
+          <p class="premiere__sub">Premieres 30.08.2026 at 15:00 CEST.</p>
+          <div class="premiere__actions">
+            <a class="btn btn--solid" href="/movies/the-architects">Open the film</a>
+            <a class="btn" href="/premiere.ics" download>Add to calendar</a>
+          </div>
+        </div>
       </section>
 
       <section class="band--tight shell" id="latest">
@@ -148,22 +209,6 @@
             <div><dt>Watch on</dt><dd>YouTube, @br4mtv</dd></div>
           </dl>
         </div>
-      </section>
-
-      <section class="band band--tight shell">
-        <a class="banner" href="/movies#the-architects" data-reveal data-hint="Open">
-          <span class="banner__media" aria-hidden="true">
-            <img data-still alt="" width="1280" height="720" />
-          </span>
-          <span class="banner__inner">
-            <span class="banner__tag">Current series</span>
-            <span class="banner__title">The Architects</span>
-            <span class="banner__copy">
-              Three command blocks. Three hidden locations. Whoever holds all three can rewrite
-              the world. The first series in a much bigger universe.
-            </span>
-          </span>
-        </a>
       </section>
 
       <section class="band band--tight shell">
@@ -214,7 +259,7 @@
         <a class="teaser" href="/shop" data-reveal>
           <span class="teaser__body">
             <span class="teaser__title">Shop</span>
-            <span class="teaser__sub">Official BR4M pieces, shipped worldwide.</span>
+            <span class="teaser__sub">The first official drop lands here soon.</span>
           </span>
           <span class="teaser__go" aria-hidden="true">
             <svg viewBox="0 0 24 24">
@@ -253,7 +298,7 @@
         <header class="sec-head">
           <div>
             <p class="label" data-reveal>Channels</p>
-            <h2 class="sec-head__title" data-split>Tune in</h2>
+            <h2 class="sec-head__title" data-split>Official links</h2>
           </div>
           <div class="sec-head__aside">
             <p class="sec-head__note" data-reveal>
@@ -276,6 +321,7 @@
             <a href="/movies">Movies</a>
             <a href="/shop">Shop</a>
             <a href="/donate">Support</a>
+            <a href="/press">Press</a>
           </div>
           <div class="foot__col" data-reveal data-reveal-stagger>
             <h3>Channels</h3>

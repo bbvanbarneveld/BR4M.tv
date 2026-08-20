@@ -33,8 +33,8 @@ export const PROJECTS = [
         release: '2026-08-30T15:00:00+02:00',
         url: '',
       },
-      { n: 2, title: 'Movie Two', tba: true },
-      { n: 3, title: 'Movie Three', tba: true },
+      { n: 2, tba: true },
+      { n: 3, tba: true },
     ],
   },
 ]
