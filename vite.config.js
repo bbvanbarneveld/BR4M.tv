@@ -1,4 +1,4 @@
-import { mkdirSync, readFileSync, writeFileSync } from 'node:fs'
+import { existsSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs'
 import { dirname, resolve } from 'node:path'
 import { fileURLToPath } from 'node:url'
 import { defineConfig } from 'vite'
@@ -53,8 +53,15 @@ function applyPageMeta(html, { title, description, url }) {
   return next
 }
 
+function sendNotFound(res, fromDist) {
+  const file = fromDist ? resolve(root, 'dist/404.html') : resolve(root, '404.html')
+  res.statusCode = 404
+  res.setHeader('Content-Type', 'text/html; charset=utf-8')
+  res.end(readFileSync(file))
+}
+
 function routes() {
-  const handle = (req, res, next) => {
+  const handle = (req, res, next, { rewriteMovies, fromDist }) => {
     const path = req.url?.split('?')[0] || '/'
 
     if (path === '/premiere.ics') {
@@ -79,7 +86,16 @@ function routes() {
     }
 
     if (isMoviePath(path)) {
-      req.url = '/movies.html'
+      if (rewriteMovies) {
+        req.url = '/movies.html'
+        next()
+        return
+      }
+      const slug = path.replace(/^\/movies\//, '').replace(/\/$/, '').replace(/\.html$/i, '')
+      if (!existsSync(resolve(root, 'dist/movies', `${slug}.html`))) {
+        sendNotFound(res, true)
+        return
+      }
       next()
       return
     }
@@ -92,8 +108,8 @@ function routes() {
     }
 
     if (!looksLikeAsset(path) && !isKnownPage(path)) {
-      res.statusCode = 404
-      req.url = '/404.html'
+      sendNotFound(res, fromDist)
+      return
     }
 
     next()
@@ -102,10 +118,14 @@ function routes() {
   return {
     name: 'br4m-routes',
     configureServer(server) {
-      server.middlewares.use(handle)
+      server.middlewares.use((req, res, next) =>
+        handle(req, res, next, { rewriteMovies: true, fromDist: false }),
+      )
     },
     configurePreviewServer(server) {
-      server.middlewares.use(handle)
+      server.middlewares.use((req, res, next) =>
+        handle(req, res, next, { rewriteMovies: false, fromDist: true }),
+      )
     },
     closeBundle() {
       const dist = resolve(root, 'dist')
