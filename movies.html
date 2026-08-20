@@ -1,0 +1,158 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, maximum-scale=5, viewport-fit=cover"
+    />
+    <title>BR4M Movies</title>
+    <meta
+      name="description"
+      content="Every BR4M movie and series made inside Minecraft, with release dates and premieres."
+    />
+    <meta name="theme-color" content="#000000" />
+    <link rel="icon" href="/logo.png" type="image/png" />
+    <link rel="apple-touch-icon" href="/logo.png" />
+    <link rel="preload" as="image" href="/projects/the-architects-hero.png" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Climate+Crisis&family=Inter+Tight:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500;700&display=swap"
+      rel="stylesheet"
+    />
+    <script>
+      document.documentElement.classList.add('js')
+    </script>
+    <style>
+      /* Critical: black out the screen until the stylesheet arrives, so raw
+         HTML never flashes. The page reveal (or a timed fallback) opens it. */
+      html,
+      body {
+        margin: 0;
+        background: #000;
+        color: #fff;
+      }
+      html.js .bar {
+        position: fixed;
+        left: 0;
+        right: 0;
+        height: 50.5vh;
+        background: #000;
+        z-index: 45;
+        animation: bar-fallback 0.8s ease 4s forwards;
+      }
+      html.js .bar--top { top: 0; }
+      html.js .bar--bottom { bottom: 0; }
+      @keyframes bar-fallback { to { height: 0; } }
+    </style>
+  </head>
+  <body>
+    <a class="skip" href="#main">Skip to content</a>
+
+    <div class="fx" aria-hidden="true">
+      <div class="fx__grain"></div>
+      <div class="fx__vignette"></div>
+    </div>
+
+    <div class="bar bar--top" data-bar aria-hidden="true"></div>
+    <div class="bar bar--bottom" data-bar aria-hidden="true"></div>
+
+    <div class="cursor" data-cursor aria-hidden="true">
+      <span class="cursor__ring"><span class="cursor__label" data-cursor-label></span></span>
+      <span class="cursor__dot"></span>
+    </div>
+
+    <div class="progress" aria-hidden="true"><i data-progress></i></div>
+
+    <header class="topbar" data-topbar>
+      <a class="topbar__mark" href="/" aria-label="BR4M home">BR<i>4</i>M</a>
+      <span class="timecode topbar__clock" data-clock></span>
+
+      <nav class="topbar__nav" aria-label="Pages">
+        <a class="ulink" href="/movies" aria-current="page">Movies</a>
+        <a class="ulink" href="/shop">Shop</a>
+        <a class="ulink" href="/donate">Support</a>
+      </nav>
+
+      <div class="topbar__tools">
+        <button
+          class="icon-btn burger"
+          type="button"
+          data-menu-toggle
+          aria-expanded="false"
+          aria-controls="menu"
+          aria-label="Open menu"
+        >
+          <i></i>
+          <i></i>
+        </button>
+      </div>
+    </header>
+
+    <nav class="drawer" id="menu" data-menu aria-label="Menu">
+      <a href="/movies">Movies</a>
+      <a href="/">Home</a>
+      <a href="/shop">Shop</a>
+      <a href="/donate">Support</a>
+    </nav>
+
+    <main id="main">
+      <section class="feature" data-feature></section>
+
+      <section class="band--tight band-bottom shell" id="movies" data-projects-home>
+        <header class="sec-head">
+          <div>
+            <p class="label" data-reveal>Movies</p>
+            <h2 class="sec-head__title" data-split>Series and films</h2>
+          </div>
+          <div class="sec-head__aside">
+            <p class="sec-head__note" data-reveal>
+              Every world BR4M is building. More movies join this wall over time.
+            </p>
+          </div>
+        </header>
+
+        <div class="cards" data-cards data-reveal data-reveal-stagger></div>
+      </section>
+
+      <section data-project-detail hidden></section>
+    </main>
+
+    <footer class="foot">
+      <div class="shell">
+        <a class="foot__mark" href="/" aria-label="BR4M home" data-reveal>BR<i>4</i>M</a>
+
+        <div class="foot__grid">
+          <div class="foot__col" data-reveal data-reveal-stagger>
+            <h3>Pages</h3>
+            <a href="/">Home</a>
+            <a href="/shop">Shop</a>
+            <a href="/donate">Support</a>
+          </div>
+          <div class="foot__col" data-reveal data-reveal-stagger>
+            <h3>Channels</h3>
+            <a href="/youtube" target="_blank" rel="noopener noreferrer">YouTube</a>
+            <a href="/discord" target="_blank" rel="noopener noreferrer">Discord</a>
+            <a href="/tiktok" target="_blank" rel="noopener noreferrer">TikTok</a>
+            <a href="https://br4m-shop.fourthwall.com/pages/memberships" target="_blank" rel="noopener noreferrer">
+              Membership
+            </a>
+          </div>
+          <div class="foot__col" data-reveal data-reveal-stagger>
+            <h3>BR4M</h3>
+            <p>Written, built and filmed inside Minecraft.</p>
+            <p>Release times follow BR4M's local clock below.</p>
+          </div>
+        </div>
+
+        <div class="foot__bar">
+          <p>© <span data-year>2026</span> BR4M</p>
+          <p class="timecode" data-clock></p>
+        </div>
+      </div>
+    </footer>
+
+    <script type="module" src="/src/projects-page.js"></script>
+  </body>
+</html>

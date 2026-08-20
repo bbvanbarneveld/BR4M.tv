@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://br4m.tv/sitemap.xml

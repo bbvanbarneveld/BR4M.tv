@@ -1,64 +1,312 @@
 <!doctype html>
-<html lang="nl-NL">
+<html lang="en">
   <head>
     <meta charset="UTF-8" />
     <meta
       name="viewport"
       content="width=device-width, initial-scale=1, maximum-scale=5, viewport-fit=cover"
     />
-    <title>BR4M</title>
+    <title>BR4M, Cinematic Minecraft</title>
     <meta
       name="description"
-      content="BR4M — cinematic Minecraft films &amp; series."
+      content="BR4M writes, builds and films original series inside Minecraft. Watch the films, wear the merch, join the world."
     />
+    <meta name="theme-color" content="#000000" />
     <link rel="icon" href="/logo.png" type="image/png" />
     <link rel="apple-touch-icon" href="/logo.png" />
+    <meta property="og:title" content="BR4M, Cinematic Minecraft" />
+    <meta
+      property="og:description"
+      content="Original series, written, built and filmed inside Minecraft."
+    />
+    <meta property="og:type" content="website" />
+    <meta property="og:image" content="/logo.png" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link rel="preconnect" href="https://i.ytimg.com" crossorigin />
     <link
-      href="https://fonts.googleapis.com/css2?family=Climate+Crisis&family=DM+Sans:wght@400;500;600;700&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Climate+Crisis&family=Inter+Tight:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500;700&display=swap"
       rel="stylesheet"
     />
-    <link rel="stylesheet" href="/src/style.css" />
+    <script>
+      document.documentElement.classList.add('js')
+    </script>
+    <style>
+      /* Critical: black out the screen until the stylesheet arrives, so raw
+         HTML never flashes. The page reveal (or a timed fallback) opens it. */
+      html,
+      body {
+        margin: 0;
+        background: #000;
+        color: #fff;
+      }
+      html.js .bar {
+        position: fixed;
+        left: 0;
+        right: 0;
+        height: 50.5vh;
+        background: #000;
+        z-index: 45;
+        animation: bar-fallback 0.8s ease 4s forwards;
+      }
+      html.js .bar--top { top: 0; }
+      html.js .bar--bottom { bottom: 0; }
+      @keyframes bar-fallback { to { height: 0; } }
+    </style>
   </head>
-  <body class="is-intro">
-    <a class="skip-link" href="#main">Ga naar de inhoud</a>
+  <body>
+    <a class="skip" href="#main">Skip to content</a>
+
+    <div class="fx" aria-hidden="true">
+      <div class="fx__grain"></div>
+      <div class="fx__vignette"></div>
+    </div>
+
+    <div class="bar bar--top" data-bar aria-hidden="true"></div>
+    <div class="bar bar--bottom" data-bar aria-hidden="true"></div>
+
+    <div class="cursor" data-cursor aria-hidden="true">
+      <span class="cursor__ring"><span class="cursor__label" data-cursor-label></span></span>
+      <span class="cursor__dot"></span>
+    </div>
+
+    <div class="progress" aria-hidden="true"><i data-progress></i></div>
+
+    <header class="topbar" data-topbar>
+      <a class="topbar__mark" href="/" aria-label="BR4M home">BR<i>4</i>M</a>
+      <span class="timecode topbar__clock" data-clock></span>
+
+      <nav class="topbar__nav" aria-label="Pages">
+        <a class="ulink" href="/movies">Movies</a>
+        <a class="ulink" href="/shop">Shop</a>
+        <a class="ulink" href="/donate">Support</a>
+      </nav>
+
+      <div class="topbar__tools">
+        <button
+          class="icon-btn burger"
+          type="button"
+          data-menu-toggle
+          aria-expanded="false"
+          aria-controls="menu"
+          aria-label="Open menu"
+        >
+          <i></i>
+          <i></i>
+        </button>
+      </div>
+    </header>
+
+    <nav class="drawer" id="menu" data-menu aria-label="Menu">
+      <a href="/movies">Movies</a>
+      <a href="/shop">Shop</a>
+      <a href="/donate">Support</a>
+    </nav>
 
     <main id="main">
-      <section
-        class="hero light-strings"
-        data-fluid
-        data-colors="#6D28D9,#C900FF,#EA580C,#FF5A1F,#0F766E,#1EECC4"
-        data-scale="35"
-        data-noise="0"
-        data-intensity="50"
-        data-speed="20"
-        data-angle="0"
-      >
-        <canvas class="fluid-canvas" aria-hidden="true"></canvas>
-        <div class="hero-inner">
-          <!-- Single paint layer: no stacked transparency where 4 ∩ M -->
-          <h1 class="hero-title">BR<i>4</i>M</h1>
+      <section class="void" id="top">
+        <canvas class="void__bolts" data-bolts aria-hidden="true"></canvas>
+        <div class="void__glow" aria-hidden="true"></div>
 
-          <a
-            class="cta-signal"
-            href="https://www.youtube.com/@br4mtv"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <span class="cta-signal__rail" aria-hidden="true"></span>
-            <span class="cta-signal__core">
-              <span class="cta-signal__label">Watch series</span>
-            </span>
-            <span class="cta-signal__rail" aria-hidden="true"></span>
-          </a>
+        <div class="void__inner">
+          <h1 class="wordmark" data-glyphs data-strike>BR<i>4</i>M</h1>
+          <p class="void__line" data-load>
+            Original series, written, built and filmed inside Minecraft, then cut like cinema.
+          </p>
+          <div class="void__actions" data-load>
+            <a class="btn btn--solid" href="/movies" data-magnetic>Movies</a>
+            <a class="btn" href="/shop" data-magnetic>Shop</a>
+          </div>
         </div>
+
+        <a class="hero-scroll void__scroll" href="#latest" data-load><i></i>Scroll</a>
+      </section>
+
+      <section class="band--tight shell" id="latest">
+        <div data-latest></div>
+      </section>
+
+      <section class="band about shell" id="about">
+        <div>
+          <p class="label" data-reveal>About</p>
+          <h2 class="statement" data-split>Minecraft, treated like <em>cinema</em>.</h2>
+        </div>
+
+        <div class="about__body">
+          <p data-reveal>
+            BR4M makes original series inside Minecraft. Every film is scripted, built block by
+            block, shot on location in the game and edited like a movie. No filler, no shouting
+            thumbnails.
+          </p>
+          <p data-reveal>
+            THE ARCHITECTS is the series currently in production. It is only the first one, and
+            more worlds and more series will follow on the same channel.
+          </p>
+          <dl class="specs" data-reveal data-reveal-stagger>
+            <div><dt>Makes</dt><dd>Cinematic Minecraft</dd></div>
+            <div><dt>Current series</dt><dd>The Architects</dd></div>
+            <div><dt>Watch on</dt><dd>YouTube, @br4mtv</dd></div>
+          </dl>
+        </div>
+      </section>
+
+      <section class="band band--tight shell">
+        <a class="banner" href="/movies#the-architects" data-reveal data-hint="Open">
+          <span class="banner__media" aria-hidden="true">
+            <img data-still alt="" width="1280" height="720" />
+          </span>
+          <span class="banner__inner">
+            <span class="banner__tag">Current series</span>
+            <span class="banner__title">The Architects</span>
+            <span class="banner__copy">
+              Three command blocks. Three hidden locations. Whoever holds all three can rewrite
+              the world. The first series in a much bigger universe.
+            </span>
+          </span>
+        </a>
+      </section>
+
+      <section class="band band--tight shell">
+        <a
+          class="member"
+          href="https://br4m-shop.fourthwall.com/pages/memberships"
+          target="_blank"
+          rel="noopener noreferrer"
+          data-reveal
+        >
+          <span class="member__tag">
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <path
+                fill="none"
+                stroke="currentColor"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="1.6"
+                d="M12 4.4l2.2 4.6l5 .7l-3.6 3.5l.9 5l-4.5-2.4l-4.5 2.4l.9-5L4.8 9.7l5-.7z"
+              />
+            </svg>
+            Membership
+          </span>
+          <span class="member__title">BR<i class="mark-i">4</i>M<i class="plus">+</i></span>
+          <span class="member__copy">
+            Subscribe to BR4M+ and unlock member perks on top of getting closer to the films.
+            Every tier and everything it includes lives on the official shop, always up to date.
+          </span>
+          <span class="member__cta">
+            <span>Become a member</span>
+            <span class="member__go" aria-hidden="true">
+              <svg viewBox="0 0 24 24">
+                <path
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="1.7"
+                  d="M7 7h10v10M7 17L17 7"
+                />
+              </svg>
+            </span>
+          </span>
+        </a>
+      </section>
+
+      <section class="band band--tight shell teasers">
+        <a class="teaser" href="/shop" data-reveal>
+          <span class="teaser__body">
+            <span class="teaser__title">Shop</span>
+            <span class="teaser__sub">Official BR4M pieces, shipped worldwide.</span>
+          </span>
+          <span class="teaser__go" aria-hidden="true">
+            <svg viewBox="0 0 24 24">
+              <path
+                fill="none"
+                stroke="currentColor"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="1.7"
+                d="M7 7h10v10M7 17L17 7"
+              />
+            </svg>
+          </span>
+        </a>
+        <a class="teaser" href="/donate" data-reveal>
+          <span class="teaser__body">
+            <span class="teaser__title">Support</span>
+            <span class="teaser__sub">Keep the films in production.</span>
+          </span>
+          <span class="teaser__go" aria-hidden="true">
+            <svg viewBox="0 0 24 24">
+              <path
+                fill="none"
+                stroke="currentColor"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="1.7"
+                d="M7 7h10v10M7 17L17 7"
+              />
+            </svg>
+          </span>
+        </a>
+      </section>
+
+      <section class="band band--tight shell" id="channels">
+        <header class="sec-head">
+          <div>
+            <p class="label" data-reveal>Channels</p>
+            <h2 class="sec-head__title" data-split>Tune in</h2>
+          </div>
+          <div class="sec-head__aside">
+            <p class="sec-head__note" data-reveal>
+              Everything official lives here. Anything else is not BR4M.
+            </p>
+          </div>
+        </header>
+
+        <div data-socials></div>
       </section>
     </main>
 
-    <footer class="site-footer">
-      <p>Copyright © <span data-year>2026</span> - BR4M</p>
+    <footer class="foot">
+      <div class="shell">
+        <a class="foot__mark" href="/" aria-label="BR4M home" data-reveal>BR<i>4</i>M</a>
+
+        <div class="foot__grid">
+          <div class="foot__col" data-reveal data-reveal-stagger>
+            <h3>Pages</h3>
+            <a href="/movies">Movies</a>
+            <a href="/shop">Shop</a>
+            <a href="/donate">Support</a>
+          </div>
+          <div class="foot__col" data-reveal data-reveal-stagger>
+            <h3>Channels</h3>
+            <a href="/youtube" target="_blank" rel="noopener noreferrer">YouTube</a>
+            <a href="/discord" target="_blank" rel="noopener noreferrer">Discord</a>
+            <a href="/tiktok" target="_blank" rel="noopener noreferrer">TikTok</a>
+            <a href="https://br4m-shop.fourthwall.com/pages/memberships" target="_blank" rel="noopener noreferrer">
+              Membership
+            </a>
+          </div>
+          <div class="foot__col" data-reveal data-reveal-stagger>
+            <h3>BR4M</h3>
+            <p>Written, built and filmed inside Minecraft.</p>
+            <p>Release times follow BR4M's local clock below.</p>
+          </div>
+        </div>
+
+        <div class="foot__bar">
+          <p>© <span data-year>2026</span> BR4M</p>
+          <p class="timecode" data-clock></p>
+        </div>
+      </div>
     </footer>
+
+    <dialog class="player" data-player aria-label="Player">
+      <div class="player__bar">
+        <span class="player__title" data-player-title></span>
+        <button class="ulink" type="button" data-close>Close</button>
+      </div>
+      <div class="player__frame" data-player-frame></div>
+    </dialog>
 
     <script type="module" src="/src/main.js"></script>
   </body>

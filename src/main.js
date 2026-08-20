@@ -1,23 +1,16 @@
-import { mountAllFluidBackgrounds } from './light-strings.js'
-import { runIntro } from './intro.js'
+import { startApp } from './app.js'
+import { mountChannels } from './channels.js'
+import { initBolts } from './bolt.js'
+import { hydrateVideos, mountLatest, mountStills } from './watch.js'
 
-function initYear() {
-  const year = String(new Date().getFullYear())
-  document.querySelectorAll('[data-year]').forEach((el) => {
-    el.textContent = year
+startApp(() => {
+  mountStills()
+  mountLatest()
+  mountChannels()
+  initBolts(document.querySelector('[data-bolts]'), document.querySelector('[data-strike]'))
+
+  hydrateVideos((live) => {
+    mountStills(live)
+    mountLatest(live)
   })
-}
-
-function boot() {
-  initYear()
-  const instances = mountAllFluidBackgrounds()
-  // Start beam cold until intro drives it
-  instances.forEach((inst) => inst.setIntroState?.({ intensity: 0, scale: 1.55, speed: 0.15 }))
-  runIntro(instances)
-}
-
-if (document.fonts?.ready) {
-  document.fonts.ready.then(boot).catch(boot)
-} else {
-  boot()
-}
+})
