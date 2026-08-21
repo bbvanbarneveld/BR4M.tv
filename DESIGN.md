@@ -498,8 +498,8 @@ quiet currency note under the split. Never a third "tier comparison" column.
 ### Press `/press`
 
 Quiet kit. Hairline download rows for the wordmark and existing stills. Real
-logline and premiere stamp. Discord is the press contact. Footer only, not top
-nav.
+logline, premiere stamp, and a short FAQ (`.faq`) so people and crawlers get the
+same facts. Discord is the press contact. Footer only, not top nav.
 
 ### 404
 
@@ -556,7 +556,26 @@ or EUR. Never geo-IP. A guess is not stored; only an explicit pick is.
 
 ---
 
-## 17. Accessibility (design implications)
+## 17. Facts for people and machines
+
+Search engines and AI crawlers should be able to answer "who is BR4M" from the
+HTML, not only from JavaScript. Keep a quiet facts block on `/movies` (`.facts`,
+same hairline `dl` as `.specs`) and a FAQ on `/press` (`.faq`). Copy stays
+English, short, and true. Do not keyword-stuff. Do not hide a second page of
+facts from visitors while showing it to bots.
+
+The homepage latest-upload row has a real link in the HTML so a crawler that
+does not run JavaScript still sees the current film. JS replaces that link with
+the player control.
+
+Machine files at the root (`/llms.txt`, `/llms-full.txt`, `/about.md`, plus
+`/home.md` and the other page `.md` files) repeat the same facts in Markdown.
+They are generated from `src/seo.js`, not a second voice. `/llms.txt` is also at
+`/.well-known/llms.txt`. HTML pages point to it with `rel="describedby"`.
+
+---
+
+## 18. Accessibility (design implications)
 
 - Skip link on every page
 - Contrast: body on black at or above WCAG AA. Do not fade type below `--ink-36`
@@ -571,7 +590,7 @@ or EUR. Never geo-IP. A guess is not stored; only an explicit pick is.
 
 ---
 
-## 18. How to design something new
+## 19. How to design something new
 
 When asked to add or redesign a surface, walk this list in order.
 
@@ -603,7 +622,7 @@ over.
 
 ---
 
-## 19. Component index (implementation)
+## 20. Component index (implementation)
 
 | Component | Where | Design notes |
 | --- | --- | --- |
@@ -630,7 +649,7 @@ Icons: `src/ui.js` `ICONS`. Brand channel glyphs: `src/socials.js`.
 
 ---
 
-## 20. Data the design depends on
+## 21. Data the design depends on
 
 Movies are added by hand in `src/data/projects.js`: slug, title, tag, poster,
 banner, blurb, entries. An entry is a title, a 16:9 `thumb` **or** a `mark`

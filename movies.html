@@ -6,39 +6,111 @@
       name="viewport"
       content="width=device-width, initial-scale=1, maximum-scale=5, viewport-fit=cover"
     />
-    <title>BR4M Movies</title>
+    <title>BR4M Movies, The First Word and The Architects</title>
     <meta
       name="description"
-      content="Every BR4M movie and series made inside Minecraft, with release dates and premieres. The First Word premieres 30.08.2026 at 15:00 CEST."
+      content="Watch BR4M movies on br4m.tv. The First Word, the first film in The Architects, premieres 30.08.2026 at 15:00 CEST. Play trailers here."
     />
     <link rel="canonical" href="https://br4m.tv/movies" />
-    <meta property="og:title" content="BR4M Movies" />
+    <link rel="alternate" hreflang="en" href="https://br4m.tv/movies" />
+    <link rel="alternate" hreflang="x-default" href="https://br4m.tv/movies" />
+    <meta name="author" content="BR4M" />
+    <meta name="color-scheme" content="dark" />
+    <meta
+      name="robots"
+      content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1"
+    />
+    <link rel="sitemap" type="application/xml" href="https://br4m.tv/sitemap.xml" />
+    <link rel="alternate" type="text/plain" title="LLM index" href="https://br4m.tv/llms.txt" />
+    <link rel="alternate" type="text/markdown" title="About BR4M" href="https://br4m.tv/about.md" />
+    <meta property="og:site_name" content="BR4M" />
+    <meta property="og:locale" content="en_US" />
+    <meta property="og:title" content="BR4M Movies, The First Word and The Architects" />
     <meta
       property="og:description"
-      content="Every BR4M movie and series made inside Minecraft, with release dates and premieres. The First Word premieres 30.08.2026 at 15:00 CEST."
+      content="Watch BR4M movies on br4m.tv. The First Word premieres 30.08.2026 at 15:00 CEST."
     />
     <meta property="og:type" content="website" />
     <meta property="og:url" content="https://br4m.tv/movies" />
     <meta property="og:image" content="https://br4m.tv/share.jpg" />
     <meta property="og:image:width" content="1200" />
     <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content="BR4M, cinematic Minecraft films" />
+    <meta property="og:image:type" content="image/jpeg" />
     <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:title" content="BR4M Movies" />
+    <meta name="twitter:title" content="BR4M Movies, The First Word and The Architects" />
     <meta
       name="twitter:description"
-      content="Every BR4M movie and series made inside Minecraft, with release dates and premieres. The First Word premieres 30.08.2026 at 15:00 CEST."
+      content="Watch BR4M movies on br4m.tv. The First Word premieres 30.08.2026 at 15:00 CEST."
     />
     <meta name="twitter:image" content="https://br4m.tv/share.jpg" />
+    <meta name="twitter:image:alt" content="BR4M, cinematic Minecraft films" />
     <script type="application/ld+json">
       {
         "@context": "https://schema.org",
-        "@type": "Movie",
-        "name": "The First Word",
-        "isPartOf": { "@type": "MovieSeries", "name": "The Architects" },
-        "description": "Three command blocks. Three hidden locations. Whoever holds all three can rewrite the world.",
-        "image": "https://br4m.tv/projects/the-architects-poster.png",
-        "datePublished": "2026-08-30T15:00:00+02:00",
-        "url": "https://br4m.tv/movies/the-architects"
+        "@graph": [
+          {
+            "@type": "Organization",
+            "@id": "https://br4m.tv/#organization",
+            "name": "BR4M",
+            "url": "https://br4m.tv",
+            "logo": "https://br4m.tv/logo.png",
+            "sameAs": [
+              "https://www.youtube.com/@br4mtv",
+              "https://discord.gg/Unb7Y2GxNT",
+              "https://www.tiktok.com/@br4m.tv"
+            ]
+          },
+          {
+            "@type": "WebSite",
+            "@id": "https://br4m.tv/#website",
+            "url": "https://br4m.tv/",
+            "name": "BR4M",
+            "publisher": { "@id": "https://br4m.tv/#organization" }
+          },
+          {
+            "@type": "CollectionPage",
+            "@id": "https://br4m.tv/movies#page",
+            "url": "https://br4m.tv/movies",
+            "name": "BR4M Movies",
+            "description": "Every BR4M movie and series, with premieres and the on-site player.",
+            "isPartOf": { "@id": "https://br4m.tv/#website" }
+          },
+          {
+            "@type": "BreadcrumbList",
+            "itemListElement": [
+              { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://br4m.tv/" },
+              { "@type": "ListItem", "position": 2, "name": "Movies", "item": "https://br4m.tv/movies" }
+            ]
+          },
+          {
+            "@type": "MovieSeries",
+            "@id": "https://br4m.tv/movies/the-architects#series",
+            "name": "The Architects",
+            "description": "Three command blocks. Three hidden locations. Whoever holds all three can rewrite the world.",
+            "url": "https://br4m.tv/movies/the-architects",
+            "image": "https://br4m.tv/projects/the-architects-poster.png"
+          },
+          {
+            "@type": "Movie",
+            "@id": "https://br4m.tv/movies/the-architects#film-1",
+            "name": "The First Word",
+            "isPartOf": { "@id": "https://br4m.tv/movies/the-architects#series" },
+            "datePublished": "2026-08-30T15:00:00+02:00",
+            "url": "https://br4m.tv/movies/the-architects",
+            "image": "https://br4m.tv/projects/the-architects-movie-1.png"
+          },
+          {
+            "@type": "ScreeningEvent",
+            "name": "The First Word premiere",
+            "startDate": "2026-08-30T15:00:00+02:00",
+            "eventAttendanceMode": "https://schema.org/OnlineEventAttendanceMode",
+            "eventStatus": "https://schema.org/EventScheduled",
+            "isAccessibleForFree": true,
+            "url": "https://br4m.tv/movies/the-architects",
+            "location": { "@type": "VirtualLocation", "url": "https://br4m.tv/movies/the-architects" }
+          }
+        ]
       }
     </script>
     <meta name="theme-color" content="#000000" />
@@ -131,6 +203,53 @@
       <section class="feature feature--hub" data-feature></section>
       <div class="hub" data-hub></div>
       <section data-project-detail hidden></section>
+      <section class="facts band shell" aria-labelledby="facts-title">
+        <p class="label">Facts</p>
+        <h2 class="facts__title" id="facts-title">BR4M movies</h2>
+        <p class="facts__lead">
+          BR4M writes, builds and films original series inside Minecraft. Play them here in the
+          BR4M player, or on YouTube at @br4mtv.
+        </p>
+        <dl class="specs">
+          <div>
+            <dt>Current series</dt>
+            <dd><a class="ulink" href="/movies/the-architects">The Architects</a></dd>
+          </div>
+          <div>
+            <dt>First film</dt>
+            <dd>The First Word</dd>
+          </div>
+          <div>
+            <dt>Premiere</dt>
+            <dd>30.08.2026 at 15:00 CEST</dd>
+          </div>
+          <div>
+            <dt>Film 2</dt>
+            <dd>To be announced, expected Q4 2026 (estimate)</dd>
+          </div>
+          <div>
+            <dt>Film 3</dt>
+            <dd>To be announced, expected Q1 2027 (estimate)</dd>
+          </div>
+          <div>
+            <dt>Watch</dt>
+            <dd>br4m.tv/movies and YouTube @br4mtv</dd>
+          </div>
+        </dl>
+        <noscript>
+          <article>
+            <h3>The Architects</h3>
+            <p>
+              A scripted trilogy. Three command blocks. Three hidden locations. Whoever holds all
+              three can rewrite the world.
+            </p>
+            <p>
+              The First Word premieres 30.08.2026 at 15:00 CEST.
+              <a href="/movies/the-architects">Open the film</a>.
+            </p>
+          </article>
+        </noscript>
+      </section>
     </main>
 
     <footer class="foot">
@@ -147,9 +266,9 @@
           </div>
           <div class="foot__col" data-reveal data-reveal-stagger>
             <h3>Channels</h3>
-            <a href="/youtube" target="_blank" rel="noopener noreferrer">YouTube</a>
-            <a href="/discord" target="_blank" rel="noopener noreferrer">Discord</a>
-            <a href="/tiktok" target="_blank" rel="noopener noreferrer">TikTok</a>
+            <a href="/youtube" target="_blank" rel="me noopener noreferrer">YouTube</a>
+            <a href="/discord" target="_blank" rel="me noopener noreferrer">Discord</a>
+            <a href="/tiktok" target="_blank" rel="me noopener noreferrer">TikTok</a>
             <a href="https://br4m-shop.fourthwall.com/pages/memberships" target="_blank" rel="noopener noreferrer">
               Membership
             </a>

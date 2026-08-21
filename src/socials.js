@@ -9,6 +9,7 @@ export const SOCIALS = [
     label: 'YouTube',
     handle: '@br4mtv',
     href: YOUTUBE_URL,
+    rel: 'me',
     note: 'Films and trailers',
   },
   {
@@ -16,6 +17,7 @@ export const SOCIALS = [
     label: 'Discord',
     handle: "Bram's Universe",
     href: DISCORD_URL,
+    rel: 'me',
     note: 'Behind the scenes',
   },
   {
@@ -23,6 +25,7 @@ export const SOCIALS = [
     label: 'TikTok',
     handle: '@br4m.tv',
     href: TIKTOK_URL,
+    rel: 'me',
     note: 'Short cuts',
   },
   {

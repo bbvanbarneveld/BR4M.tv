@@ -13,7 +13,7 @@ export function mountChannels() {
   SOCIALS.forEach((item) => {
     const li = document.createElement('li')
     li.innerHTML = `
-      <a class="chan" href="${escapeHtml(item.href)}" target="_blank" rel="noopener noreferrer">
+      <a class="chan" href="${escapeHtml(item.href)}" target="_blank" rel="${item.rel ? `${item.rel} ` : ''}noopener noreferrer">
         <span class="chan__icon">${BRAND_ICONS[item.id] || ''}</span>
         <span class="chan__name">${escapeHtml(item.label)}</span>
         <span class="chan__handle">${escapeHtml(item.handle)}</span>

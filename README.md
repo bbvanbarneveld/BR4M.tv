@@ -13,7 +13,11 @@ film stills as heroes, letterbox page reveals, film grain, a live CET clock.
 | `/movies/:slug` | `movies.html` | Same page, path-routed detail. Build also emits `movies/:slug.html` for share tags |
 | `/shop` | `shop.html` | Fourthwall catalog, currency globe, bag, checkout |
 | `/donate` | `donate.html` | BR4M+ membership, one-time donations, Discord |
-| `/press` | `press.html` | Logline, premiere stamp, downloadable stills |
+| `/press` | `press.html` | Logline, premiere stamp, downloadable stills, facts |
+| `/llms.txt` | generated | Curated map of the site for AI crawlers |
+| `/llms-full.txt` | generated | Full entity facts plus FAQ for AI ingest |
+| `/about.md` | generated | Entity facts for machines |
+| `/home.md` and other `.md` | generated | Markdown twin of each HTML page |
 | (unknown) | `404.html` | Not-found page. nginx does not fall back to home |
 
 Legacy `/watch` and `/projects` redirect to `/movies`. Legacy `/movies#slug` rewrites to
@@ -91,6 +95,7 @@ public Storefront API, and checkout is always hosted by Fourthwall.
 | `src/globe.js` | Currency switcher: dot-globe dialog that lights up the countries |
 | `src/fourthwall.js` | Storefront API client |
 | `src/youtube-feed.js` | Feed parsing, brand URLs, vanity routes |
+| `src/seo.js` | JSON-LD graphs, sitemap, robots.txt, llms.txt, page Markdown, IndexNow |
 
 ## Vanity routes
 

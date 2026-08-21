@@ -80,6 +80,24 @@ Keep these working in `nginx.conf` and the Vite plugin in `vite.config.js`.
   so a popup is never cursor-less.
 - After injecting DOM async, call `applyReveals(root)`, `initMagnetic(root)` and `refresh()`.
 
+## Search and AI crawlers
+
+- Keep `robots.txt` open to Google, Bing, GPTBot, OAI-SearchBot, ClaudeBot,
+  PerplexityBot, GrokBot, and the other agents listed in `src/seo.js`. Do not
+  block AI search crawlers. Named `Allow: /` groups matter; do not rely only on
+  `User-agent: *`.
+- `sitemap.xml`, `robots.txt`, `llms.txt`, `llms-full.txt`, page Markdown,
+  `about.md`, `/.well-known/llms.txt` and the IndexNow key file are generated
+  from `src/seo.js` on dev and build. Do not hand-edit the copies in `public/`
+  except through that module.
+- JSON-LD must match visible copy. No prices or invented titles in schema.
+  Graphs are built in `src/seo.js` and injected at build (`transformIndexHtml`).
+- Facts for machines also live as visible FAQ on `/press` and a facts block on
+  `/movies`, plus static homepage copy. Do not hide crawlable facts with `display:
+  none` while showing something else to users.
+- Production build pings IndexNow so Bing (and ChatGPT search, which reads Bing)
+  hears about URL changes. Keep the public key file at the site root.
+
 ## YouTube feed (homepage)
 
 - Long-form uploads only. Filter Shorts.

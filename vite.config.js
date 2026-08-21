@@ -4,6 +4,14 @@ import { fileURLToPath } from 'node:url'
 import { defineConfig } from 'vite'
 import { premiereIcs } from './src/calendar.js'
 import { featuredRelease, PROJECTS } from './src/data/projects.js'
+import {
+  applyDocumentSeo,
+  moviePageGraph,
+  pageNameFromFile,
+  pageSeo,
+  submitIndexNow,
+  writeSeoFiles,
+} from './src/seo.js'
 import { SITE_URL } from './src/site.js'
 import { VANITY_REDIRECTS } from './src/youtube-feed.js'
 
@@ -23,7 +31,7 @@ const PAGE_REWRITES = {
 }
 
 function isMoviePath(path) {
-  return /^\/movies\/[^/]+\/?$/.test(path)
+  return /^\/movies\/[^/]+\/?$/.test(path) && !/\.[a-zA-Z0-9]+$/.test(path)
 }
 
 function looksLikeAsset(path) {
@@ -40,17 +48,8 @@ function isKnownPage(path) {
   return path === '/' || Boolean(PAGE_REWRITES[path]) || Boolean(VANITY_REDIRECTS[path]) || isMoviePath(path)
 }
 
-function applyPageMeta(html, { title, description, url }) {
-  const next = html
-    .replace(/<title>[^<]*<\/title>/, `<title>${title}</title>`)
-    .replace(/(<meta\s+name="description"\s+content=")[^"]*(")/, `$1${description}$2`)
-    .replace(/(<link\s+rel="canonical"\s+href=")[^"]*(")/, `$1${url}$2`)
-    .replace(/(<meta\s+property="og:url"\s+content=")[^"]*(")/g, `$1${url}$2`)
-    .replace(/(<meta\s+property="og:title"\s+content=")[^"]*(")/g, `$1${title}$2`)
-    .replace(/(<meta\s+property="og:description"\s+content=")[^"]*(")/g, `$1${description}$2`)
-    .replace(/(<meta\s+name="twitter:title"\s+content=")[^"]*(")/g, `$1${title}$2`)
-    .replace(/(<meta\s+name="twitter:description"\s+content=")[^"]*(")/g, `$1${description}$2`)
-  return next
+function applyPageMeta(html, options) {
+  return applyDocumentSeo(html, options)
 }
 
 function sendNotFound(res, fromDist) {
@@ -117,7 +116,11 @@ function routes() {
 
   return {
     name: 'br4m-routes',
+    buildStart() {
+      writeSeoFiles(resolve(root, 'public'))
+    },
     configureServer(server) {
+      writeSeoFiles(resolve(root, 'public'))
       server.middlewares.use((req, res, next) =>
         handle(req, res, next, { rewriteMovies: true, fromDist: false }),
       )
@@ -127,12 +130,22 @@ function routes() {
         handle(req, res, next, { rewriteMovies: false, fromDist: true }),
       )
     },
-    closeBundle() {
+    transformIndexHtml: {
+      order: 'pre',
+      handler(html, ctx) {
+        const name = pageNameFromFile(ctx.filename || ctx.path)
+        const seo = name ? pageSeo(name) : null
+        return seo ? applyDocumentSeo(html, seo) : html
+      },
+    },
+    async closeBundle() {
       const dist = resolve(root, 'dist')
       const featured = featuredRelease()
       if (featured) {
         writeFileSync(resolve(dist, 'premiere.ics'), premiereIcs(featured))
       }
+
+      writeSeoFiles(dist)
 
       const moviesHtml = readFileSync(resolve(dist, 'movies.html'), 'utf8')
       mkdirSync(resolve(dist, 'movies'), { recursive: true })
@@ -142,9 +155,16 @@ function routes() {
           title,
           description: project.blurb,
           url: `${SITE_URL}/movies/${project.slug}`,
+          image: `${SITE_URL}${project.poster}`,
+          imageAlt: `${project.title}, a BR4M movie`,
+          type: 'video.movie',
+          markdown: `/movies/${project.slug}.md`,
+          graph: moviePageGraph(project),
         })
         writeFileSync(resolve(dist, 'movies', `${project.slug}.html`), html)
       }
+
+      await submitIndexNow()
     },
   }
 }
