@@ -80,9 +80,17 @@ function showBagButtons() {
   })
 }
 
-function note(root, text) {
-  root.innerHTML = `<p class="empty" data-reveal>${escapeHtml(text)}</p>`
+const EMPTY_COPY = 'Merch is in the works. The first official BR4M drop lands here soon.'
+
+function note(root, text = EMPTY_COPY) {
+  root.innerHTML = `
+    <div class="empty-shop" data-reveal>
+      <p class="empty-shop__copy">${escapeHtml(text)}</p>
+      <a class="btn" href="/movies" data-magnetic>Movies</a>
+    </div>
+  `
   applyReveals(root)
+  initMagnetic(root)
   refresh()
 }
 
@@ -348,7 +356,7 @@ function pieceNode(product) {
 
   button.innerHTML = `
     <span class="piece__still">
-      ${src ? `<img src="${escapeHtml(src)}" alt="" width="900" height="1125" />` : ''}
+      ${src ? `<img src="${escapeHtml(src)}" alt="${escapeHtml(product.name)}" width="900" height="1125" />` : ''}
       ${sold ? '<span class="piece__tag">Sold out</span>' : ''}
     </span>
     <span class="piece__row">
@@ -366,7 +374,7 @@ function renderWall(products) {
   if (!root) return
 
   if (!products.length) {
-    note(root, 'Nothing in the shop yet.')
+    note(root)
     return
   }
 
@@ -422,7 +430,7 @@ export async function mountShop() {
   })
 
   if (!TOKEN) {
-    note(root, 'Merch is in the works. The first official BR4M drop lands here soon.')
+    note(root)
     return
   }
 

@@ -8,8 +8,8 @@ film stills as heroes, letterbox page reveals, film grain, a live CET clock.
 
 | URL | File | Content |
 | --- | --- | --- |
-| `/` | `index.html` | Lightning wordmark, premiere countdown, newest upload, about, BR4M+, teasers, channels |
-| `/movies` | `movies.html` | Featured premiere with countdown, posters, movie detail |
+| `/` | `index.html` | Lightning wordmark, premiere countdown, newest upload, about, shop/support teasers, channels |
+| `/movies` | `movies.html` | Billboard, series rails, BR4M+ strip, trailers, on-site player |
 | `/movies/:slug` | `movies.html` | Same page, path-routed detail. Build also emits `movies/:slug.html` for share tags |
 | `/shop` | `shop.html` | Fourthwall catalog, currency globe, bag, checkout |
 | `/donate` | `donate.html` | BR4M+ membership, one-time donations, Discord |
@@ -75,12 +75,13 @@ public Storefront API, and checkout is always hosted by Fourthwall.
 | `src/site.js` | Live origin and movie paths |
 | `src/bolt.js` | Hero lightning: WebGL fragment-shader glow (2D canvas fallback) |
 | `src/reel.js` | YouTube background reel for hero sections |
+| `src/player.js` | On-site player: viewport-fitted BR4M chrome over a youtube.com iframe (views count; Like/Comment open YouTube; ads pass through; real full screen) |
 | `src/cash3d.js` | Real 3D extruded `$` and `+` glyphs (Three.js, pointer-reactive, lazy on the donate page) |
 | `src/motion.js` | Lenis, ScrollTrigger, reveals, page reveal, magnetic hover |
-| `src/cursor.js` | Custom cursor |
+| `src/cursor.js` | Custom cursor (reparented into dialogs and Fullscreen API views) |
 | `src/chrome.js` | CET clock (Europe/Amsterdam), year, mobile menu |
 | `src/watch.js` | Video mounts, film stills, hover preview, player dialog |
-| `src/projects.js` + `src/data/projects.js` | Project wall, detail view, release data |
+| `src/projects.js` + `src/data/projects.js` | Movies hub, billboard, rails, TBA "?" tiles, BR4M+ strip, series pages |
 | `src/countdown.js` | Premiere countdown with blur ticks and phases |
 | `src/channels.js` | Channel rows |
 | `src/shop.js` | Product wall, product sheet, bag |

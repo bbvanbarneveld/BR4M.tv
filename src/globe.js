@@ -1,6 +1,7 @@
 import gsap from 'gsap'
 import { CURRENCIES, getCurrency, onCurrency, setCurrency } from './currency.js'
 import { ICONS } from './ui.js'
+import { parkCursor } from './cursor.js'
 import { setPageScrollLocked, reducedMotion } from './motion.js'
 
 /**
@@ -156,6 +157,7 @@ async function buildDialog() {
     const open = Boolean(document.querySelector('dialog[open]'))
     document.body.classList.toggle('is-dialog', open)
     setPageScrollLocked(open)
+    parkCursor()
   }
 
   const inner = dialog.querySelector('.orb__inner')

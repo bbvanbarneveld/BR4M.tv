@@ -7,7 +7,7 @@ import { reducedMotion } from './motion.js'
 
 let apiPromise = null
 
-function loadApi() {
+export function loadYouTubeApi() {
   if (window.YT?.Player) return Promise.resolve()
   if (!apiPromise) {
     apiPromise = new Promise((resolve) => {
@@ -27,7 +27,7 @@ function loadApi() {
 export async function mountReel(host, { videoId, start = 0, onPlaying } = {}) {
   if (!host || !videoId || reducedMotion()) return null
 
-  await loadApi()
+  await loadYouTubeApi()
 
   const mount = document.createElement('div')
   host.append(mount)

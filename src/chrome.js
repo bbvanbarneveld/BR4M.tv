@@ -20,6 +20,8 @@ function tickClock() {
     const stamp = formatter.format(new Date())
     nodes.forEach((node) => {
       node.textContent = stamp
+      node.setAttribute('aria-label', `BR4M local time ${stamp}`)
+      node.title = 'BR4M local time'
     })
   }
   paint()
@@ -38,27 +40,43 @@ function initMenu() {
   const drawer = document.querySelector('[data-menu]')
   if (!toggle || !drawer) return
 
+  let lastFocus = null
+  const links = () => [...drawer.querySelectorAll('a')]
+
   const setOpen = (open) => {
     drawer.classList.toggle('is-open', open)
     toggle.classList.toggle('is-on', open)
     toggle.setAttribute('aria-expanded', String(open))
     toggle.setAttribute('aria-label', open ? 'Close menu' : 'Open menu')
+    drawer.inert = !open
+    if (open) {
+      lastFocus = document.activeElement
+      links()[0]?.focus()
+    } else {
+      lastFocus?.focus?.()
+    }
   }
+
+  drawer.inert = true
 
   toggle.addEventListener('click', () => {
     setOpen(!drawer.classList.contains('is-open'))
   })
 
   drawer.addEventListener('click', (event) => {
-    const link = event.target.closest('a[href^="#"]')
+    const link = event.target.closest('a')
     if (!link) return
-    event.preventDefault()
+    if (link.getAttribute('href')?.startsWith('#')) {
+      event.preventDefault()
+      setOpen(false)
+      setTimeout(() => scrollTo(link.getAttribute('href')), 260)
+      return
+    }
     setOpen(false)
-    setTimeout(() => scrollTo(link.getAttribute('href')), 260)
   })
 
   window.addEventListener('keydown', (event) => {
-    if (event.key === 'Escape') setOpen(false)
+    if (event.key === 'Escape' && drawer.classList.contains('is-open')) setOpen(false)
   })
 }
 

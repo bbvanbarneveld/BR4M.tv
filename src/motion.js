@@ -26,7 +26,15 @@ export function setPageScrollLocked(locked) {
 }
 
 export function refresh() {
-  requestAnimationFrame(() => ScrollTrigger.refresh())
+  requestAnimationFrame(() => {
+    lenis?.resize()
+    ScrollTrigger.refresh()
+  })
+}
+
+export function resetScroll() {
+  if (lenis) lenis.scrollTo(0, { immediate: true })
+  else window.scrollTo(0, 0)
 }
 
 export function scrollTo(target) {
@@ -218,7 +226,10 @@ function initScrollChrome() {
       if (!topbar) return
       const y = self.scroll()
       topbar.classList.toggle('is-stuck', y > 40)
-      topbar.classList.toggle('is-hidden', self.direction === 1 && y > 380)
+      topbar.classList.toggle(
+        'is-hidden',
+        finePointer() && self.direction === 1 && y > 380,
+      )
     },
   })
 }
@@ -255,7 +266,12 @@ export function initMotion() {
   document.body.classList.toggle('js-motion', soft)
 
   if (soft) {
-    lenis = new Lenis({ autoRaf: false, lerp: 0.085, wheelMultiplier: 0.95 })
+    lenis = new Lenis({
+      autoRaf: false,
+      lerp: 0.085,
+      wheelMultiplier: 0.95,
+      allowNestedScroll: true,
+    })
     lenis.on('scroll', ScrollTrigger.update)
     gsap.ticker.add((time) => lenis.raf(time * 1000))
     gsap.ticker.lagSmoothing(0)

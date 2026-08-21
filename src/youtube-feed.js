@@ -32,6 +32,18 @@ export function isShort(video) {
   return Boolean(video?.short) || /\/shorts\//i.test(video?.url || '')
 }
 
+/** YouTube id from a watch URL, short URL, embed URL, or a bare 11-char id. */
+export function youtubeIdFrom(value) {
+  const raw = String(value || '').trim()
+  if (/^[\w-]{11}$/.test(raw)) return raw
+  return (
+    raw.match(/[?&]v=([^&]+)/)?.[1] ||
+    raw.match(/youtu\.be\/([^?&/]+)/)?.[1] ||
+    raw.match(/embed\/([^?&/]+)/)?.[1] ||
+    ''
+  )
+}
+
 export function parseYouTubeRss(xml) {
   return [...xml.matchAll(/<entry>([\s\S]*?)<\/entry>/g)].map((m) => {
     const block = m[1]

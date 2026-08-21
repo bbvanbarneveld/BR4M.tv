@@ -1,14 +1,15 @@
 import { featuredRelease } from './data/projects.js'
 import { moviePath } from './site.js'
 import { mountCountdown, phaseOf, releaseStamp } from './countdown.js'
-import { calendarActionHtml, liveSubtitle, releaseActionHtml, youtubeReminderHtml } from './release.js'
+import { calendarActionHtml, liveSubtitle, releaseActionHtml, releaseNote } from './release.js'
 import { bindCalendarDownload } from './calendar.js'
 import { escapeHtml } from './ui.js'
 import { applyReveals, initMagnetic, refresh } from './motion.js'
 
 /**
  * Homepage premiere band: still, date, countdown, calendar.
- * Premiere / watch buttons stay disabled until a real YouTube URL is set.
+ * Watch / premiere links only appear when a real YouTube URL is set.
+ * Never fall back to the channel. Never show a disabled pill.
  */
 export function mountPremiere() {
   const host = document.querySelector('[data-premiere]')
@@ -22,6 +23,7 @@ export function mountPremiere() {
   const { project, entry } = featured
   const still = entry.hero || entry.thumb || project.poster
   const year = new Date(entry.release).getUTCFullYear()
+  const filmHref = moviePath(project.slug)
 
   host.hidden = false
   host.innerHTML = `
@@ -45,9 +47,10 @@ export function mountPremiere() {
       <div class="premiere__cd" data-load data-premiere-cd></div>
       <div class="premiere__actions" data-load>
         <span data-premiere-actions></span>
-        <a class="btn btn--solid" href="${escapeHtml(moviePath(project.slug))}" data-magnetic>Open the film</a>
-        <span data-premiere-calendar>${calendarActionHtml()}</span>
+        <span data-premiere-calendar></span>
+        <a class="btn" href="${escapeHtml(filmHref)}" data-magnetic data-open-film>Open the film</a>
       </div>
+      <p class="release-note" data-premiere-note hidden></p>
     </div>
   `
 
@@ -55,6 +58,7 @@ export function mountPremiere() {
   const calendar = host.querySelector('[data-premiere-calendar]')
   const label = host.querySelector('[data-premiere-label]')
   const sub = host.querySelector('[data-premiere-sub]')
+  const note = host.querySelector('[data-premiere-note]')
 
   const paint = (phase) => {
     if (label) label.textContent = phase === 'live' ? 'Out now' : 'Next premiere'
@@ -64,16 +68,31 @@ export function mountPremiere() {
           ? liveSubtitle(entry)
           : `Premieres ${releaseStamp(entry.release)}.`
     }
+    const watch = releaseActionHtml(entry, phase)
     if (actions) {
-      actions.innerHTML = `${releaseActionHtml(entry, phase)}${phase !== 'live' ? youtubeReminderHtml(entry) : ''}`
+      actions.innerHTML = watch
       initMagnetic(actions)
     }
-    if (calendar) calendar.hidden = phase === 'live'
+    const openFilm = host.querySelector('[data-open-film]')
+    if (openFilm) openFilm.hidden = Boolean(watch) || phase === 'live'
+    if (calendar) {
+      calendar.hidden = phase === 'live'
+      if (phase !== 'live') {
+        calendar.innerHTML = calendarActionHtml({ solid: !watch })
+        bindCalendarDownload(calendar, featured)
+        initMagnetic(calendar)
+      } else {
+        calendar.innerHTML = ''
+      }
+    }
+    const line = releaseNote(entry, phase)
+    if (note) {
+      note.hidden = !line
+      note.textContent = line
+    }
   }
 
-  paint(phaseOf(entry.release))
   mountCountdown(host.querySelector('[data-premiere-cd]'), entry.release, { onPhase: paint })
-  bindCalendarDownload(host, featured)
   applyReveals(host)
   initMagnetic(host)
   refresh()

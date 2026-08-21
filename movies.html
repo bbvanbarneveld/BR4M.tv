@@ -121,31 +121,15 @@
     </header>
 
     <nav class="drawer" id="menu" data-menu aria-label="Menu">
-      <a href="/movies">Movies</a>
       <a href="/">Home</a>
+      <a href="/movies" aria-current="page">Movies</a>
       <a href="/shop">Shop</a>
       <a href="/donate">Support</a>
     </nav>
 
     <main id="main">
-      <section class="feature" data-feature></section>
-
-      <section class="band--tight band-bottom shell" id="movies" data-projects-home>
-        <header class="sec-head">
-          <div>
-            <p class="label" data-reveal>Movies</p>
-            <h2 class="sec-head__title" data-split>Series and films</h2>
-          </div>
-          <div class="sec-head__aside">
-            <p class="sec-head__note" data-reveal>
-              Every world BR4M is building. More movies join this wall over time.
-            </p>
-          </div>
-        </header>
-
-        <div class="cards" data-cards data-reveal data-reveal-stagger></div>
-      </section>
-
+      <section class="feature feature--hub" data-feature></section>
+      <div class="hub" data-hub></div>
       <section data-project-detail hidden></section>
     </main>
 
@@ -183,6 +167,65 @@
         </div>
       </div>
     </footer>
+
+    <dialog class="stage" data-stage aria-label="Player" data-lenis-prevent>
+      <div class="stage__shell" data-stage-shell>
+      <div class="stage__tools">
+        <button class="stage__ctrl" type="button" data-stage-full aria-label="Full screen"></button>
+        <button class="stage__close icon-btn" type="button" data-close aria-label="Close player"></button>
+      </div>
+      <div class="stage__screen" data-stage-screen>
+        <img class="stage__poster" data-stage-poster alt="" hidden />
+        <div class="stage__mount" data-stage-mount></div>
+        <div class="stage__hit" data-stage-hit></div>
+        <p class="stage__ad" data-stage-ad hidden>Ad</p>
+        <button class="stage__big" type="button" data-stage-big aria-label="Play">
+          <span class="stage__big-disc"></span>
+        </button>
+        <div class="stage__dock" data-stage-dock>
+          <div class="stage__meta">
+            <p class="stage__title" data-stage-title></p>
+            <div class="stage__social">
+              <a
+                class="stage__out"
+                data-stage-like
+                target="_blank"
+                rel="noopener noreferrer"
+                hidden
+                aria-label="Like on YouTube"
+              ></a>
+              <a
+                class="stage__out"
+                data-stage-comment
+                target="_blank"
+                rel="noopener noreferrer"
+                hidden
+                aria-label="Comment on YouTube"
+              ></a>
+            </div>
+          </div>
+          <div class="stage__row">
+            <button class="stage__ctrl" type="button" data-stage-toggle aria-label="Play"></button>
+            <div
+              class="stage__scrub"
+              data-stage-scrub
+              role="slider"
+              aria-label="Position"
+              aria-valuemin="0"
+              aria-valuemax="0"
+              aria-valuenow="0"
+              tabindex="0"
+            >
+              <i data-stage-fill></i>
+            </div>
+            <span class="stage__time"><span data-stage-now>0:00</span> / <span data-stage-end>0:00</span></span>
+            <button class="stage__ctrl" type="button" data-stage-mute aria-label="Turn sound on"></button>
+            <button class="stage__ctrl" type="button" data-stage-full-dock aria-label="Full screen"></button>
+          </div>
+        </div>
+      </div>
+      </div>
+    </dialog>
 
     <script type="module" src="/src/projects-page.js"></script>
   </body>

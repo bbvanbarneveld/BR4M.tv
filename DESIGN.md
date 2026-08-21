@@ -18,14 +18,14 @@ The single source of truth for how this site looks, moves and speaks.
 | --- | --- | --- |
 | `--black` | `#000000` | Page surface, always |
 | `--ink` | `#ffffff` | Primary type, the theme colour |
-| `--ink-70/52/36` | white alphas | Body, secondary, tertiary type |
+| `--ink-70/52/36` | white 70% / 52% / 50% | Body, secondary, tertiary type. Tertiary stays at or above ~4.5:1 on black |
 | `--line` / `--line-soft` | white 14% / 7% | Hairlines |
 | `--violet` | `#C900FF` | The main accent. Hovers, highlights, BR4M+ |
 | `--violet-deep` | `#6B21A8` | Glows, gradients |
 | `--violet-pale` | `#E9D5FF` | Accent text on dark |
 | `--cash` / `--cash-deep` / `--cash-pale` | `#2FD575` family | **Donations only**: the 3D `$` mark (`.cash`). Never anywhere else |
 
-No other hues. Violet stays under ~10% of any view; green appears only on donation elements.
+No other hues as theme tokens. Violet stays under ~10% of any view; green appears only on donation elements. Untitled film tiles may use a per-entry `mark` colour for a Climate Crisis "?" (Architects film 2 `#87BEA8`, film 3 `#7E69D2`). Never reuse another still as a stand-in.
 
 ## Type
 
@@ -51,14 +51,22 @@ uppercase, tracking 0.2em+, `--ink-36`. Body max ~52ch.
 - Ease: expo/quart out only (`--ease-expo`, `--ease-soft`). No bounce, no elastic.
 - Page load: letterbox bars open (~1.15s) while `[data-load]` items rise in;
   `[data-glyphs]` wordmark letters stagger. Fail-safe completes the timeline after 4.5s.
-- Scroll: Lenis smooth scroll + GSAP ScrollTrigger. `[data-reveal]` rises once at 90%,
+- Scroll: Lenis smooth scroll + GSAP ScrollTrigger (`allowNestedScroll` so a
+  horizontal rail does not swallow the page wheel). `[data-reveal]` rises once at 90%,
   `[data-reveal-stagger]` staggers children, `[data-split]` masks heading lines,
   `[data-parallax]` drifts imagery. A 6s guard force-shows anything left invisible.
+  Movie rails are `overflow-x: auto; overflow-y: hidden` and must not carry
+  `data-lenis-prevent`.
 - Hover: every interactive element responds. House styles: white fill sweep from below
   (`.btn`, `.chan`, `.teaser`), underline draw (`.ulink`), image zoom 1.02→1.06 on stills,
   violet border-bottom shift on meta rows, magnetic pull on `[data-magnetic]`.
 - Cursor: difference-blend dot + trailing ring; `[data-hint]` swells the ring into a
-  white disc with a label (Play, Open, View). Hidden for touch, reduced motion, dialogs.
+  white disc with a label (Play, Open, View). Native pointer is hidden while the custom
+  cursor is active. Hidden for touch and reduced motion. Native `<dialog>` elements
+  paint in the top layer, so the cursor node is moved into fullscreen dialogs
+  (`.stage`, `.orb`). When the player uses the Fullscreen API, the cursor moves into
+  that fullscreen node (the player shell). Other dialogs restore the system pointer.
+  The visitor is never left without a cursor.
 - Countdown ticks re-blur each digit on change (blur 7px, rise 0.3em, 550ms expo).
 - `prefers-reduced-motion`: no cursor, no reveals, no autorotation, bars open instantly.
 
@@ -66,21 +74,23 @@ uppercase, tracking 0.2em+, `--ink-36`. Body max ~52ch.
 
 | Component | File | Notes |
 | --- | --- | --- |
-| Void hero | `index.html` + `.void` + `src/bolt.js` | Pure black, everything centered. **Hovering the wordmark makes electricity crackle across the letters** (small arcs every ~95ms + `.is-live` glow); ambient bolts still strike every 4 to 8s. Text flashes with strikes (`.is-struck`), pulsing violet glow behind. No background image. Rendered by a **WebGL fragment shader** (per-pixel distance to the bolt polylines, white-hot exponential core + wide violet halo); a small 2D-canvas path exists only as a no-WebGL fallback |
-| Featured hero | `.feature` (movies) + `src/reel.js` | Netflix-style: Bebas Neue title, meta dot row (year, tag, entry), countdown, phase actions, calendar download. Hero art (subtle drift) is the poster frame; once the muted YouTube reel plays it crossfades in and loops from `reelStart` to the end. Sound only via the corner toggle. Reel id lives in `src/data/projects.js` (swap for the trailer later) |
-| Homepage premiere | `.premiere` + `src/premiere.js` | Compact feature band on the homepage: still, film title, countdown, Open the film, Add to calendar. Premiere and watch buttons stay disabled until `url` is set. Never fall back to the channel. |
+| Void hero | `index.html` + `.void` + `src/bolt.js` | Pure black, everything centered. One CTA: the current film. **Hovering the wordmark makes electricity crackle across the letters** (small arcs every ~95ms + `.is-live` glow); ambient bolts still strike every 4 to 8s. Text flashes with strikes (`.is-struck`), pulsing violet glow behind. No background image. Rendered by a **WebGL fragment shader** (per-pixel distance to the bolt polylines, white-hot exponential core + wide violet halo); a small 2D-canvas path exists only as a no-WebGL fallback |
+| Movies hub | `/movies` + `src/projects.js` | Netflix-like catalog: full-bleed billboard, horizontal rails of 16:9 tiles, a BR4M+ members-site strip, a series poster row. Always looks like a hub, even with one series. Data is added by hand in `src/data/projects.js`. |
+| Featured hero | `.feature` (movies) + `src/reel.js` | Billboard of the next premiere. Bebas Neue film title, series in the meta row, logline, countdown. Muted looping reel. **Play trailer** opens the on-site player. Calendar stays the reminder. A heavier left veil keeps type readable over burned-in titles. |
+| On-site player | `.stage` + `src/player.js` | Viewport-fitted 16:9 BR4M chrome over a `youtube.com` iframe (not nocookie) so plays count as YouTube views. Play, pause, seek, mute, time, **full screen** (real Fullscreen API, portrait and landscape; CSS cover if the UA blocks it). Closing the player always exits full screen. Like and Comment open that video on YouTube. Space / K / arrows / M / F / Esc. While a YouTube ad plays, BR4M overlays lift so Skip stays clickable and the scrubber does not follow ad time. The YouTube bar never shows. |
+| Homepage premiere | `.premiere` + `src/premiere.js` | Compact feature band: still, film title, countdown, Add to calendar, Open the film. Watch / premiere links only appear when `url` is set. Never a disabled pill. Never fall back to the channel. |
 | Latest upload row | `.latest` (homepage) + `src/watch.js` | Compact hairline row: 16:9 thumb, label + title + date, play disc. Opens the dialog player |
 | Countdown | `src/countdown.js` + `.cd` | Mono digits; each tick crossfades: old value blurs up and out while the new one blurs in from below (700ms). Colons are transparent white with a soft pulse, never violet. Phases far/soon/live |
-| Poster wall | `.cards` | 2:3 posters, hover lift −6px + zoom, meta row underneath |
-| Movie banner | `.pbanner` | Wide banner image, veiled, above movie detail |
-| Entry tiles | `.ep` | 16:9 thumbs; released = link + play disc, upcoming = date chip, TBA = "?" |
-| Dialog player | `[data-player]` | 16:9 modal player for YouTube uploads |
-| Currency globe | `src/globe.js` + `src/landdots.js` + `.orb` | Dot cloud built from **real Natural Earth land polygons** (`world-atlas` land-110m rasterized to a 2.2 degree grid, lazy chunk); the selected currency's countries light up violet and the globe turns toward them. List shows code, name and symbol; scrollable with the wheel (`data-lenis-prevent`). Map is drawn unmirrored (east to the right). The dialog animates open (panel rises + scales in, backdrop fades) and closes through the same motion, including Esc; reduced motion snaps. It only ever opens from the shop's own currency button, never in front of an outgoing link. The starting currency is guessed from the device time zone (language region as backup), so a visitor in Europe lands on EUR without touching anything |
+| Poster wall | `.cards` | Legacy 2:3 posters. The movies hub uses `.tile--poster` in a rail instead |
+| Movie banner | `.series-hero` | Wide banner, veiled, on `/movies/:slug` |
+| Film tiles | `.tile` | 16:9 stills in a horizontal rail. Hover scale, play disc, title overlay. Upcoming tiles with no art use a Climate Crisis "?" in the entry's `mark` colour, never a reused still, plus an expected quarter and the word Estimate. Do not invent titles. |
+| Homepage player | `[data-player]` | 16:9 modal for homepage latest-upload. Movies uses `.stage` |
+| Currency globe | `src/globe.js` + `src/landdots.js` + `.orb` | Fullscreen transparent dialog with the panel inside, so the custom cursor can live in the top layer. Dot cloud built from **real Natural Earth land polygons** (`world-atlas` land-110m rasterized to a 2.2 degree grid, lazy chunk); the selected currency's countries light up violet and the globe turns toward them. List shows code, name and symbol; scrollable with the wheel (`data-lenis-prevent`). Map is drawn unmirrored (east to the right). The dialog animates open (panel rises + scales in, backdrop fades) and closes through the same motion, including Esc; reduced motion snaps. It only ever opens from the shop's own currency button, never in front of an outgoing link. The starting currency is guessed from the device time zone (language region as backup), so a visitor in Europe lands on EUR without touching anything |
 | Bag | `src/shop.js` + `.sheet` | Count badge, qty stepper, trash remove, subtotal |
-| Membership banner | `.member` | Name + link only, violet glow, star tag |
+| Membership banner | `.member` | Name + link only, violet glow, star tag. Not on the homepage. On `/movies` a `.member--hub` strip says BR4M+ watches ad free on the members site, plus more films, extras and member perks. Never list specific perks, tiers or prices. BR4M+ signup still lives on Fourthwall. |
 | Teasers | `.teaser` | Giant type rows with white sweep + rotating arrow disc |
 | Channels | `.chan` | Brand icon rows with white sweep |
-| Press kit | `.kit` + `/press` | Hairline download rows for existing stills only. Footer link, not top nav |
+| Press kit | `.kit` + `/press` | Hairline download rows for the wordmark and existing stills. Footer link, not top nav. Discord is the press contact |
 | Lost page | `.lost` + `404.html` | Quiet not-found. nginx and the Vite plugin serve it for unknown paths |
 
 Icons: thin 1.5–1.7 stroke SVGs from `ICONS` in `src/ui.js` (and brand glyphs in
@@ -117,27 +127,41 @@ Icons: thin 1.5–1.7 stroke SVGs from `ICONS` in `src/ui.js` (and brand glyphs 
 
 ## Movies & releases
 
-- Data lives in `src/data/projects.js`. A movie project = slug, title, tag, poster, banner,
-  blurb, entries. Entries = title, 16:9 thumb, optional `hero` art, `release` instant,
-  `url` (YouTube).
-- Premiere flow: greyed "Premiere not available yet" button until 24h before release
-  ("far"), premiere link appears in the last 24h if `url` is set ("soon"), watch link
-  only after release ("live") and only if `url` is set. A missing URL never falls back
-  to the channel. Untitled TBA slots render as "To be announced", do not invent titles.
+- Data lives in `src/data/projects.js` and is added by hand. A movie project = slug, title,
+  tag, poster, banner, blurb, entries. Entries = title, 16:9 thumb or a `mark` colour
+  for a "?" tile, optional `hero` art, `release` instant, `expected` quarter (an estimate,
+  never a locked date), `url` (YouTube), `reel` (trailer id for the hub player).
+- `/movies` is the catalog hub: billboard plus rails (the current series' films, a BR4M+
+  members-site strip, trailers and extras from the YouTube feed, then every series poster).
+  It must already feel like a studio library, not an empty page waiting for the first premiere.
+- Untitled slots stay "To be announced". Current Architects estimates: film 2 expected
+  Q4 2026 (mark `#87BEA8`), film 3 expected Q1 2027 (mark `#7E69D2`). Copy must say it is an estimate.
+- The BR4M player embeds on `www.youtube.com` with sound from the visitor's play click so
+  the watch counts as a YouTube view. Like and Comment leave to that YouTube page. Full
+  screen is the Fullscreen API and must exit on close. YouTube ads keep the iframe
+  clickable: BR4M chrome lifts, the scrubber holds the film time.
+- Premiere flow: **Play trailer** uses the on-site player. **Add to calendar** is the
+  reminder. Watch / premiere links only appear when `url` is set. A missing URL never
+  falls back to the channel. No disabled pills.
 - Paste the YouTube premiere URL into the entry's `url` field as soon as it exists.
   "Add to calendar" writes `/premiere.ics` from that same release instant (one-hour
-  reminder window, not a claimed runtime). "Set a YouTube reminder" only appears when
-  `url` is set.
+  reminder window, not a claimed runtime).
 - Movie detail is a real path (`/movies/the-architects`). Legacy `/movies#the-architects`
   rewrites there. `/watch` and `/projects` redirect to `/movies` (nginx + Vite plugin).
-- Press (`/press`) lists only existing stills and the real logline and premiere stamp.
-  Footer only, not top nav.
+- Press (`/press`) lists the wordmark, existing stills, the real logline and premiere stamp,
+  and Discord as the press contact. Footer only, not top nav.
 - Unknown URLs serve `404.html` (nginx `=404`, Vite plugin in preview). Do not fall
   back to the homepage.
 - Share cards use `https://br4m.tv/share.jpg` (1200×630 crop of the current hero still),
   plus `og:url`, canonical, and Twitter large-image tags on every page.
 - Shop empty state copy: "Merch is in the works. The first official BR4M drop lands
   here soon." Homepage shop teaser uses the same honest line, not a shipping promise.
+  The empty shop is a composed block with a Movies exit. The currency globe stays
+  visible. The homepage hero does not link to Shop until the drop is live.
+- Custom cursor hides the native pointer (`cursor: none`) while `body.has-cursor`.
+  In dialogs and Fullscreen API views the cursor node is reparented (`parkCursor`);
+  other dialogs restore `cursor: auto`. The topbar does not hide on scroll for touch.
+  The giant outlined footer wordmark is full-scale on home and smaller on interior pages.
 
 ## Imagery specs
 

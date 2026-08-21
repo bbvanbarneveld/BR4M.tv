@@ -97,15 +97,15 @@ export function mountLatest(list = latestVideos()) {
     return
   }
 
-  const { series, beat } = splitTitle(video.title)
+  const { series } = splitTitle(video.title)
   host.innerHTML = `
     <button class="latest" type="button" data-hint="Play" data-reveal aria-label="Play ${escapeHtml(video.title)}">
       <span class="latest__media">
-        <img src="${thumb(video.id)}" alt="" width="1280" height="720" loading="lazy" />
+        <img src="${thumb(video.id)}" alt="${escapeHtml(video.title)}" width="1280" height="720" loading="lazy" />
       </span>
       <span class="latest__copy">
         <span class="latest__label">Latest upload</span>
-        <span class="latest__title">${escapeHtml(beat || series)}</span>
+        <span class="latest__title">${escapeHtml(video.title)}</span>
         <span class="latest__meta">
           <span>${escapeHtml(series)}</span>
           ${stamp(video.published) ? `<span class="latest__date">${escapeHtml(stamp(video.published))}</span>` : ''}
