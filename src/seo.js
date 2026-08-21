@@ -1157,7 +1157,7 @@ Canonical page: ${SITE_URL}/privacy
 
 BR4M is the controller for br4m.tv. Contact: Discord (${DISCORD_URL}).
 
-Optional cookies are Google Analytics 4 (measurement ID G-DJJBGLYNVJ) and YouTube. Both are Google services. They do not run before consent. Necessary storage remembers this choice, and a currency if you pick one.
+Optional cookies are Analytics (which pages people visit) and YouTube (to play films here). They do not run before you choose. Necessary storage remembers this choice, and a currency if you pick one.
 
 ${PRIVACY_FAQS.map((item) => `## ${item.q}\n\n${item.a}`).join('\n\n')}
 
@@ -1190,6 +1190,7 @@ export function writeSeoFiles(dir) {
   writeFileSync(resolve(root, 'donate.md'), donateMarkdown())
   writeFileSync(resolve(root, 'press.md'), pressMarkdown())
   writeFileSync(resolve(root, 'privacy.md'), privacyMarkdown())
+
   writeFileSync(resolve(root, '.well-known/llms.txt'), llmsTxt())
   writeFileSync(resolve(root, '.well-known/tdmrep.json'), tdmrepJson())
   writeFileSync(resolve(root, `${INDEXNOW_KEY}.txt`), `${INDEXNOW_KEY}\n`)

@@ -20,6 +20,8 @@ let tick = 0
 let hideChrome = 0
 let playing = false
 let muted = false
+let volume = 80
+let lastAudible = 80
 let duration = 0
 let contentDuration = 0
 let lastContentTime = 0
@@ -48,6 +50,61 @@ function watchUrl(id, hash = '') {
   return `https://www.youtube.com/watch?v=${encodeURIComponent(id)}${hash}`
 }
 
+const VOL_KEY = 'br4m.tv:volume'
+
+function readVolume() {
+  try {
+    const raw = JSON.parse(localStorage.getItem(VOL_KEY) || '')
+    const next = Math.round(Number(raw?.volume))
+    if (next >= 0 && next <= 100) return next
+  } catch {
+    /* private mode / quota */
+  }
+  return 80
+}
+
+function writeVolume(next) {
+  try {
+    localStorage.setItem(VOL_KEY, JSON.stringify({ volume: next }))
+  } catch {
+    /* private mode / quota */
+  }
+}
+
+function applySound(player = yt) {
+  if (!player?.setVolume) return
+  try {
+    player.setVolume(volume)
+    if (muted || volume === 0) player.mute()
+    else player.unMute()
+  } catch {
+    /* ads can reject an early unMute */
+  }
+}
+
+function setVolumeLevel(next) {
+  const vol = Math.min(100, Math.max(0, Math.round(Number(next) || 0)))
+  volume = vol
+  if (vol > 0) {
+    lastAudible = vol
+    muted = false
+  } else {
+    muted = true
+  }
+  writeVolume(lastAudible)
+  applySound()
+}
+
+function toggleMute() {
+  if (muted || volume === 0) {
+    muted = false
+    if (volume === 0) volume = lastAudible || 80
+  } else {
+    muted = true
+  }
+  applySound()
+}
+
 function fsNode() {
   return document.fullscreenElement || document.webkitFullscreenElement || null
 }
@@ -74,11 +131,21 @@ function paintPlay(root, isPlaying) {
   if (big) big.hidden = advertising || isPlaying
 }
 
-function paintMute(root, isMuted) {
+function paintVolume(root) {
+  const silent = muted || volume === 0
+  const shown = silent ? 0 : volume
   const button = $('[data-stage-mute]', root)
-  if (!button) return
-  button.innerHTML = isMuted ? ICONS.soundOff : ICONS.soundOn
-  button.setAttribute('aria-label', isMuted ? 'Turn sound on' : 'Turn sound off')
+  if (button) {
+    button.innerHTML = silent ? ICONS.soundOff : ICONS.soundOn
+    button.setAttribute('aria-label', silent ? 'Turn sound on' : 'Turn sound off')
+  }
+  const fill = $('[data-stage-vol-fill]', root)
+  const bar = $('[data-stage-vol]', root)
+  if (fill) fill.style.transform = `scaleX(${shown / 100})`
+  if (bar) {
+    bar.setAttribute('aria-valuenow', String(shown))
+    bar.setAttribute('aria-valuetext', silent ? 'Muted' : `${shown} percent`)
+  }
 }
 
 function paintFullscreen(root) {
@@ -120,14 +187,19 @@ function paintOut(root, id) {
 
 function showChrome(root, sticky = false) {
   if (advertising) {
-    root.classList.remove('is-chrome')
+    root.classList.remove('is-chrome', 'is-idle')
     clearTimeout(hideChrome)
     return
   }
   root.classList.add('is-chrome')
+  root.classList.remove('is-idle')
   clearTimeout(hideChrome)
-  if (sticky || overChrome || reducedMotion() || !playing) return
-  hideChrome = window.setTimeout(() => root.classList.remove('is-chrome'), 2600)
+  if (!playing || sticky) return
+  hideChrome = window.setTimeout(() => {
+    if (advertising || overChrome || !playing) return
+    if (!reducedMotion()) root.classList.remove('is-chrome')
+    root.classList.add('is-idle')
+  }, 2600)
 }
 
 function readAdPlaying() {
@@ -281,6 +353,17 @@ function destroyPlayer() {
   videoId = ''
 }
 
+function volumeFromEvent(event, root) {
+  const bar = $('[data-stage-vol]', root)
+  if (!bar) return
+  const rect = bar.getBoundingClientRect()
+  const x = 'clientX' in event ? event.clientX : event.touches?.[0]?.clientX
+  if (x == null) return
+  const ratio = Math.min(1, Math.max(0, (x - rect.left) / rect.width))
+  setVolumeLevel(ratio * 100)
+  paintVolume(root)
+}
+
 function seekFromEvent(event, root) {
   const bar = $('[data-stage-scrub]', root)
   if (!bar || !yt?.seekTo || advertising) return
@@ -348,8 +431,11 @@ async function loadVideo(root, { id, title, start = 0, sound = true }) {
   paintTime(root, 0, 0)
   paintPlay(root, false)
   paintOut(root, id)
+  volume = readVolume()
+  lastAudible = volume || 80
   muted = !sound
-  paintMute(root, muted)
+  if (!muted && volume === 0) volume = lastAudible || 80
+  paintVolume(root)
   paintFullscreen(root)
   fitScreen(root)
 
@@ -390,12 +476,12 @@ async function loadVideo(root, { id, title, start = 0, sound = true }) {
         if (duration > contentDuration) contentDuration = duration
         fitScreen(root)
         try {
-          if (sound) event.target.unMute()
-          else event.target.mute()
+          applySound(event.target)
           event.target.playVideo()
         } catch {
           // Ads can reject an early unMute; the next user gesture still works.
         }
+        paintVolume(root)
         paintTime(root, start, contentDuration || duration)
         const bar = $('[data-stage-scrub]', root)
         if (bar) {
@@ -469,7 +555,7 @@ function bindStage(root) {
   if (like) like.innerHTML = `${ICONS.like}<span>Like</span>`
   if (comment) comment.innerHTML = `${ICONS.comment}<span>Comment</span>`
   paintPlay(root, false)
-  paintMute(root, false)
+  paintVolume(root)
   paintFullscreen(root)
 
   bindDialog(root, {
@@ -485,7 +571,7 @@ function bindStage(root) {
         poster.removeAttribute('src')
         poster.hidden = true
       }
-      root.classList.remove('is-on', 'is-chrome', 'is-ad', 'is-fs', 'is-full')
+      root.classList.remove('is-on', 'is-chrome', 'is-idle', 'is-ad', 'is-fs', 'is-full')
       onCloseExtra?.()
     },
   })
@@ -525,16 +611,8 @@ function bindStage(root) {
 
   $('[data-stage-mute]', root)?.addEventListener('click', (event) => {
     event.stopPropagation()
-    if (!yt) return
-    muted = !muted
-    try {
-      if (muted) yt.mute()
-      else yt.unMute()
-    } catch {
-      muted = !muted
-      return
-    }
-    paintMute(root, muted)
+    toggleMute()
+    paintVolume(root)
   })
 
   const onFull = (event) => {
@@ -560,7 +638,7 @@ function bindStage(root) {
 
   const keepChrome = (on) => {
     overChrome = on
-    if (on) showChrome(root, true)
+    showChrome(root, on)
   }
   $('[data-stage-dock]', root)?.addEventListener('pointerenter', () => keepChrome(true))
   $('[data-stage-dock]', root)?.addEventListener('pointerleave', () => keepChrome(false))
@@ -581,6 +659,34 @@ function bindStage(root) {
     window.addEventListener('pointermove', move)
     window.addEventListener('pointerup', up)
   })
+
+  const vol = $('[data-stage-vol]', root)
+  vol?.addEventListener('pointerdown', (event) => {
+    event.preventDefault()
+    event.stopPropagation()
+    overChrome = true
+    volumeFromEvent(event, root)
+    const move = (next) => volumeFromEvent(next, root)
+    const up = () => {
+      overChrome = false
+      window.removeEventListener('pointermove', move)
+      window.removeEventListener('pointerup', up)
+      showChrome(root)
+    }
+    window.addEventListener('pointermove', move)
+    window.addEventListener('pointerup', up)
+  })
+  vol?.addEventListener(
+    'wheel',
+    (event) => {
+      event.preventDefault()
+      event.stopPropagation()
+      setVolumeLevel(volume + (event.deltaY > 0 ? -6 : 6))
+      paintVolume(root)
+      showChrome(root, true)
+    },
+    { passive: false },
+  )
 
   root.addEventListener('mousemove', () => showChrome(root))
   root.addEventListener('touchstart', () => showChrome(root), { passive: true })
@@ -603,15 +709,42 @@ function bindStage(root) {
       }
     }
     if (event.key === 'm' || event.key === 'M') {
-      muted = !muted
-      try {
-        if (muted) yt.mute()
-        else yt.unMute()
-      } catch {
-        muted = !muted
+      event.preventDefault()
+      toggleMute()
+      paintVolume(root)
+      return
+    }
+    if (event.key === 'ArrowUp') {
+      event.preventDefault()
+      setVolumeLevel(volume + 6)
+      paintVolume(root)
+      return
+    }
+    if (event.key === 'ArrowDown') {
+      event.preventDefault()
+      setVolumeLevel(volume - 6)
+      paintVolume(root)
+      return
+    }
+    if (event.target instanceof Element && event.target.closest('[data-stage-vol]')) {
+      if (event.key === 'ArrowRight' || event.key === 'ArrowLeft') {
+        event.preventDefault()
+        setVolumeLevel(volume + (event.key === 'ArrowRight' ? 6 : -6))
+        paintVolume(root)
         return
       }
-      paintMute(root, muted)
+      if (event.key === 'Home') {
+        event.preventDefault()
+        setVolumeLevel(100)
+        paintVolume(root)
+        return
+      }
+      if (event.key === 'End') {
+        event.preventDefault()
+        setVolumeLevel(0)
+        paintVolume(root)
+        return
+      }
     }
     if (advertising) return
     const total = contentDuration || duration

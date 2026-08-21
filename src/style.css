@@ -496,6 +496,16 @@ body.has-cursor * {
 
 body.has-cursor .cursor {
   opacity: 1;
+  transition: opacity 0.45s var(--ease-soft);
+}
+
+body.has-cursor .stage.is-idle .cursor {
+  opacity: 0;
+}
+
+.stage.is-idle,
+.stage.is-idle * {
+  cursor: none !important;
 }
 
 /* Native dialogs live in the top layer, above the page cursor.
@@ -3581,6 +3591,51 @@ dialog::backdrop {
   align-items: center;
 }
 
+.stage__sound {
+  display: flex;
+  align-items: center;
+  gap: 0.15rem;
+}
+
+.stage__vol {
+  position: relative;
+  width: 4.6rem;
+  height: 1.35rem;
+  display: grid;
+  align-items: center;
+  cursor: pointer;
+}
+
+.stage__vol::before {
+  content: "";
+  height: 0.35rem;
+  border-radius: 99px;
+  background: rgba(255, 255, 255, 0.18);
+}
+
+.stage__vol i {
+  position: absolute;
+  left: 0;
+  right: 0;
+  height: 0.35rem;
+  border-radius: 99px;
+  background: var(--ink);
+  transform: scaleX(0.8);
+  transform-origin: left center;
+  pointer-events: none;
+}
+
+.stage__vol:hover::before,
+.stage__vol:focus-visible::before {
+  background: rgba(255, 255, 255, 0.3);
+}
+
+.stage__vol:focus-visible {
+  outline: 2px solid var(--violet);
+  outline-offset: 3px;
+  border-radius: 99px;
+}
+
 .stage__ctrl {
   display: grid;
   place-items: center;
@@ -3708,6 +3763,10 @@ dialog::backdrop {
 
   .stage__time {
     display: none;
+  }
+
+  .stage__vol {
+    width: 3.4rem;
   }
 
   .stage__title {

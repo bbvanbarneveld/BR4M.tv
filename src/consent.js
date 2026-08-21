@@ -224,11 +224,10 @@ function markup() {
       <div class="consent__view" data-consent-banner>
         <div class="consent__copy">
           <p class="label">Cookies</p>
-          <h2 class="consent__title" id="consent-title">A choice, before Google runs.</h2>
+          <h2 class="consent__title" id="consent-title">Optional cookies</h2>
           <p class="consent__lead">
-            Optional cookies here are Google Analytics and YouTube. Both are Google
-            services. They stay off until you pick. Necessary storage only remembers
-            this choice, and a currency if you set one.
+            This site can see which pages people visit, and can play films with YouTube.
+            Both stay off until you choose. You can change this later.
           </p>
         </div>
         <div class="consent__actions">
@@ -245,36 +244,29 @@ function markup() {
           <p class="label">Cookies</p>
           <h2 class="consent__title" id="consent-settings-title">Choose what can run</h2>
           <p class="consent__lead">
-            You can change this later from Privacy or Cookies in the footer. Rejecting
-            is as easy as accepting. Nothing optional is on unless you turn it on.
+            Turn on only what you want. You can change this later from Cookies in the
+            footer.
           </p>
         </div>
         <div class="consent__opts">
           <label class="consent__opt">
             <span class="consent__opt-text">
               <strong>Necessary</strong>
-              <span>This choice, and your currency if you pick one. Always on.</span>
+              <span>Remembers this choice, and your currency if you pick one. Always on.</span>
             </span>
             <input type="checkbox" checked disabled tabindex="-1" />
           </label>
           <label class="consent__opt">
             <span class="consent__opt-text">
               <strong>Analytics</strong>
-              <span>
-                Google Analytics 4, measurement ID ${GA_MEASUREMENT_ID}. Page views so
-                BR4M can see what is used. No ads features, no Google Signals.
-              </span>
+              <span>Helps BR4M see which pages people visit.</span>
             </span>
             <input type="checkbox" data-consent-analytics />
           </label>
           <label class="consent__opt">
             <span class="consent__opt-text">
               <strong>YouTube</strong>
-              <span>
-                Loads youtube.com when you play a film or trailer so the play can count
-                as a YouTube view. YouTube sets its own cookies. The player does not use
-                youtube-nocookie.
-              </span>
+              <span>Lets you play films and trailers here. YouTube may use its own cookies.</span>
             </span>
             <input type="checkbox" data-consent-media />
           </label>
@@ -377,11 +369,10 @@ export function renderMediaGate(host, { title = 'this film', watchUrl = '' } = {
   host.innerHTML = `
     <div class="media-gate">
       <p class="label">YouTube</p>
-      <h2 class="media-gate__title">Allow YouTube to play</h2>
+      <h2 class="media-gate__title">Play with YouTube?</h2>
       <p class="media-gate__lead">
-        ${escapeText(title)} plays in the BR4M player on youtube.com so the play can count as a
-        YouTube view. YouTube is a Google service and will set cookies. This does not turn
-        Analytics on.
+        To watch ${escapeText(title)} here, YouTube has to load. YouTube may use cookies.
+        You can open it on YouTube instead.
       </p>
       <div class="media-gate__actions">
         <button class="btn btn--solid" type="button" data-consent-yt-allow>Allow YouTube</button>

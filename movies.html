@@ -340,7 +340,21 @@
               <i data-stage-fill></i>
             </div>
             <span class="stage__time"><span data-stage-now>0:00</span> / <span data-stage-end>0:00</span></span>
-            <button class="stage__ctrl" type="button" data-stage-mute aria-label="Turn sound on"></button>
+            <div class="stage__sound">
+              <button class="stage__ctrl" type="button" data-stage-mute aria-label="Turn sound off"></button>
+              <div
+                class="stage__vol"
+                data-stage-vol
+                role="slider"
+                aria-label="Volume"
+                aria-valuemin="0"
+                aria-valuemax="100"
+                aria-valuenow="80"
+                tabindex="0"
+              >
+                <i data-stage-vol-fill></i>
+              </div>
+            </div>
             <button class="stage__ctrl" type="button" data-stage-full-dock aria-label="Full screen"></button>
           </div>
         </div>

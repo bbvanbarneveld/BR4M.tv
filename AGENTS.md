@@ -44,6 +44,7 @@ Keep these working in `nginx.conf` and the Vite plugin in `vite.config.js`.
   uses the Fullscreen API
   (with a CSS cover fallback) and must exit when the player closes. During YouTube ads,
   lift BR4M overlays so Skip works; do not seek or rewrite the timeline from ad time.
+  Volume is a mute control plus a level slider (up/down keys, remembered on this device).
   Untitled films stay "To be announced"; expected quarters must be labelled as estimates.
   Films without a still use a Climate Crisis "?" in the entry's `mark` colour, never a
   reused photo.

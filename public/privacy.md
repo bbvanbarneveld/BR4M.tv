@@ -6,7 +6,7 @@ Canonical page: https://br4m.tv/privacy
 
 BR4M is the controller for br4m.tv. Contact: Discord (https://discord.gg/Unb7Y2GxNT).
 
-Optional cookies are Google Analytics 4 (measurement ID G-DJJBGLYNVJ) and YouTube. Both are Google services. They do not run before consent. Necessary storage remembers this choice, and a currency if you pick one.
+Optional cookies are Analytics (which pages people visit) and YouTube (to play films here). They do not run before you choose. Necessary storage remembers this choice, and a currency if you pick one.
 
 ## Do any optional cookies run before I choose?
 

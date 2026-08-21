@@ -510,9 +510,11 @@ Footer only, not top nav. Cookie settings is a real button, not a fake link.
 
 Fixed bottom panel on black, hairline, equal **Reject optional** and **Accept
 all** (both `.btn`, not a solid Accept that shouts). Customize is an underline.
-Do not trap the page. Do not show it over the player (`body.is-dialog` hides
-it). The player then carries its own YouTube gate: Allow YouTube, Open on
-YouTube, Not now. Analytics stays off unless they already allowed it.
+Visitor copy only: which pages people visit, and YouTube to play films. No
+measurement IDs, no nocookie talk. Do not trap the page. Do not show it over
+the player (`body.is-dialog` hides it). The player then carries its own YouTube
+gate: Allow YouTube, Open on YouTube, Not now. Analytics stays off unless they
+already allowed it.
 
 ### 404
 
@@ -529,14 +531,16 @@ The BR4M player (`.stage` + `src/player.js`) is a black cinematic chrome over a
 - 16:9 frame **contained** in the viewport (and in real Fullscreen API, portrait
   and landscape). JS sizes the frame; CSS is the fallback
 - YouTube's own bar never shows (`controls: 0`)
-- BR4M chrome: play/pause, scrub, time, mute, full screen, title, Like, Comment
+- BR4M chrome: play/pause, scrub, time, volume (mute plus a level slider), full screen, title, Like, Comment
 - Full screen is the Fullscreen API on the player shell; CSS cover if the UA
   blocks it. Close always exits full screen. `F` toggles
 - Like / Comment open that YouTube page in a new tab
 - **Ads:** lift hit layer, big play, and dock so Skip stays clickable. Do not
   seek or rewrite the timeline from ad time. Keep close (and full screen) available
-- Keyboard: Space / K, arrows, M, F, Esc
+- Keyboard: Space / K, arrows (seek), up/down (volume), M, F, Esc
 - Custom cursor must live inside the fullscreen node
+- While a film is playing, cursor and chrome idle after a short still moment.
+  Move again and they come back. Keep the cursor during ads so Skip stays findable.
 
 Homepage latest-upload still uses a simpler `[data-player]` dialog. Movies use
 `.stage`. Do not send the visitor to youtube.com for a hub play once YouTube
