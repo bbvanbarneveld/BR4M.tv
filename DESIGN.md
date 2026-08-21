@@ -501,6 +501,19 @@ Quiet kit. Hairline download rows for the wordmark and existing stills. Real
 logline, premiere stamp, and a short FAQ (`.faq`) so people and crawlers get the
 same facts. Discord is the press contact. Footer only, not top nav.
 
+### Privacy `/privacy`
+
+Quiet policy page, same interior hero as Press. Hairline table for cookies.
+Footer only, not top nav. Cookie settings is a real button, not a fake link.
+
+### Cookie bar
+
+Fixed bottom panel on black, hairline, equal **Reject optional** and **Accept
+all** (both `.btn`, not a solid Accept that shouts). Customize is an underline.
+Do not trap the page. Do not show it over the player (`body.is-dialog` hides
+it). The player then carries its own YouTube gate: Allow YouTube, Open on
+YouTube, Not now. Analytics stays off unless they already allowed it.
+
 ### 404
 
 Quiet not-found on black. Do not dump the visitor on home. Do not be funny at
@@ -526,7 +539,9 @@ The BR4M player (`.stage` + `src/player.js`) is a black cinematic chrome over a
 - Custom cursor must live inside the fullscreen node
 
 Homepage latest-upload still uses a simpler `[data-player]` dialog. Movies use
-`.stage`. Do not send the visitor to youtube.com for a hub play.
+`.stage`. Do not send the visitor to youtube.com for a hub play once YouTube
+cookies are allowed. Before that, the gate offers Open on YouTube as the
+equivalent path.
 
 ---
 

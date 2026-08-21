@@ -1,0 +1,358 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, maximum-scale=5, viewport-fit=cover"
+    />
+    <title>Privacy and cookies, BR4M</title>
+    <meta
+      name="description"
+      content="How BR4M uses cookies. Google Analytics and YouTube stay off until you choose. You can reject as easily as you accept."
+    />
+    <link rel="canonical" href="https://br4m.tv/privacy" />
+    <link rel="alternate" hreflang="en" href="https://br4m.tv/privacy" />
+    <link rel="alternate" hreflang="x-default" href="https://br4m.tv/privacy" />
+    <meta name="author" content="BR4M" />
+    <meta name="color-scheme" content="dark" />
+    <meta
+      name="robots"
+      content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1"
+    />
+    <link rel="sitemap" type="application/xml" href="https://br4m.tv/sitemap.xml" />
+    <link rel="alternate" type="text/plain" title="LLM index" href="https://br4m.tv/llms.txt" />
+    <link rel="alternate" type="text/markdown" title="About BR4M" href="https://br4m.tv/about.md" />
+    <meta property="og:site_name" content="BR4M" />
+    <meta property="og:locale" content="en_US" />
+    <meta property="og:title" content="Privacy and cookies, BR4M" />
+    <meta
+      property="og:description"
+      content="How BR4M uses cookies. Google Analytics and YouTube stay off until you choose."
+    />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://br4m.tv/privacy" />
+    <meta property="og:image" content="https://br4m.tv/share.jpg" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content="BR4M, cinematic Minecraft films" />
+    <meta property="og:image:type" content="image/jpeg" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Privacy and cookies, BR4M" />
+    <meta
+      name="twitter:description"
+      content="How BR4M uses cookies. Google Analytics and YouTube stay off until you choose."
+    />
+    <meta name="twitter:image" content="https://br4m.tv/share.jpg" />
+    <meta name="twitter:image:alt" content="BR4M, cinematic Minecraft films" />
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@graph": [
+          {
+            "@type": "Organization",
+            "@id": "https://br4m.tv/#organization",
+            "name": "BR4M",
+            "url": "https://br4m.tv"
+          },
+          {
+            "@type": "WebPage",
+            "@id": "https://br4m.tv/privacy#page",
+            "url": "https://br4m.tv/privacy",
+            "name": "Privacy and cookies, BR4M"
+          }
+        ]
+      }
+    </script>
+    <meta name="theme-color" content="#000000" />
+    <link rel="icon" href="/logo.png" type="image/png" />
+    <link rel="apple-touch-icon" href="/logo.png" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Climate+Crisis&family=Inter+Tight:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500;700&display=swap"
+      rel="stylesheet"
+    />
+    <script>
+      document.documentElement.classList.add('js')
+    </script>
+    <style>
+      html,
+      body {
+        margin: 0;
+        background: #000;
+        color: #fff;
+      }
+      html.js .bar {
+        position: fixed;
+        left: 0;
+        right: 0;
+        height: 50.5vh;
+        background: #000;
+        z-index: 45;
+        animation: bar-fallback 0.8s ease 4s forwards;
+      }
+      html.js .bar--top { top: 0; }
+      html.js .bar--bottom { bottom: 0; }
+      @keyframes bar-fallback { to { height: 0; } }
+    </style>
+  </head>
+  <body>
+    <a class="skip" href="#main">Skip to content</a>
+
+    <div class="fx" aria-hidden="true">
+      <div class="fx__grain"></div>
+      <div class="fx__vignette"></div>
+    </div>
+
+    <div class="bar bar--top" data-bar aria-hidden="true"></div>
+    <div class="bar bar--bottom" data-bar aria-hidden="true"></div>
+
+    <div class="cursor" data-cursor aria-hidden="true">
+      <span class="cursor__ring"><span class="cursor__label" data-cursor-label></span></span>
+      <span class="cursor__dot"></span>
+    </div>
+
+    <div class="progress" aria-hidden="true"><i data-progress></i></div>
+
+    <header class="topbar" data-topbar>
+      <a class="topbar__mark" href="/" aria-label="BR4M home">BR<i>4</i>M</a>
+      <span class="timecode topbar__clock" data-clock></span>
+
+      <nav class="topbar__nav" aria-label="Pages">
+        <a class="ulink" href="/movies">Movies</a>
+        <a class="ulink" href="/shop">Shop</a>
+        <a class="ulink" href="/donate">Support</a>
+      </nav>
+
+      <div class="topbar__tools">
+        <button
+          class="icon-btn burger"
+          type="button"
+          data-menu-toggle
+          aria-expanded="false"
+          aria-controls="menu"
+          aria-label="Open menu"
+        >
+          <i></i>
+          <i></i>
+        </button>
+      </div>
+    </header>
+
+    <nav class="drawer" id="menu" data-menu aria-label="Menu">
+      <a href="/">Home</a>
+      <a href="/movies">Movies</a>
+      <a href="/shop">Shop</a>
+      <a href="/donate">Support</a>
+    </nav>
+
+    <main id="main">
+      <header class="page-hero shell">
+        <div class="page-hero__row">
+          <h1 class="page-title" data-load>Privacy</h1>
+          <p class="page-hero__note" data-load>
+            Optional Google tools stay off until you choose. Rejecting is as easy as accepting.
+          </p>
+        </div>
+      </header>
+
+      <section class="band--tight band-bottom shell policy">
+        <div>
+          <p class="label">Who is responsible</p>
+          <h2>BR4M</h2>
+          <p>
+            BR4M is the controller for this website (br4m.tv). Contact for privacy questions is
+            Discord.
+            <a class="ulink" href="/discord" target="_blank" rel="me noopener noreferrer">Open Discord</a>.
+          </p>
+        </div>
+
+        <div>
+          <p class="label">Your choice</p>
+          <h2>Cookies</h2>
+          <p>
+            This site uses strictly necessary storage and, only if you allow them, two Google
+            services: Google Analytics 4 and YouTube. Nothing optional runs before you pick.
+            You can accept all, reject optional, or set each one. You can change that later.
+          </p>
+          <p>
+            <button class="btn" type="button" data-open-consent data-magnetic>Cookie settings</button>
+          </p>
+        </div>
+
+        <div>
+          <h2>What we use</h2>
+          <div class="policy-table-wrap">
+            <table class="policy-table">
+              <thead>
+                <tr>
+                  <th>Name</th>
+                  <th>Who</th>
+                  <th>Why</th>
+                  <th>How long</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>br4m.tv:consent</td>
+                  <td>BR4M</td>
+                  <td>Remembers this cookie choice. Necessary.</td>
+                  <td>13 months on this device</td>
+                </tr>
+                <tr>
+                  <td>br4m.tv:currency</td>
+                  <td>BR4M</td>
+                  <td>Remembers a currency only after you pick one. Necessary for the shop.</td>
+                  <td>Until you clear it</td>
+                </tr>
+                <tr>
+                  <td>_ga, _ga_*</td>
+                  <td>Google Analytics</td>
+                  <td>Page views if you allow Analytics. Measurement ID G-DJJBGLYNVJ. No ads features.</td>
+                  <td>Up to 13 months</td>
+                </tr>
+                <tr>
+                  <td>YouTube cookies</td>
+                  <td>Google / YouTube</td>
+                  <td>Set by youtube.com when you play a film here. Needed so a play can count as a YouTube view.</td>
+                  <td>Set by YouTube</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <div>
+          <h2>Google Analytics</h2>
+          <p>
+            If you allow Analytics, the site loads Google tag G-DJJBGLYNVJ. That tag can see
+            which pages you open, roughly where you are (not a precise address), your device
+            type, and referral. IP addresses are truncated. Google Signals and ads
+            personalisation stay off. Legal basis: consent.
+          </p>
+          <p>
+            Google LLC is in the United States. Google is certified under the EU-US Data
+            Privacy Framework. See
+            <a class="ulink" href="https://policies.google.com/privacy" target="_blank" rel="noopener noreferrer">Google's privacy policy</a>
+            and
+            <a class="ulink" href="https://policies.google.com/technologies/cookies" target="_blank" rel="noopener noreferrer">Google's cookie page</a>.
+          </p>
+        </div>
+
+        <div>
+          <h2>YouTube</h2>
+          <p>
+            Films and trailers play in the BR4M player on youtube.com, not youtube-nocookie,
+            so a play can count as a YouTube view. That loads Google's player and YouTube
+            cookies. Like and Comment open YouTube in a new tab. Legal basis: consent.
+            If you refuse, you can still open the film on YouTube itself.
+          </p>
+          <p>
+            A muted background reel on the movies hub also uses YouTube. It only starts after
+            YouTube is allowed.
+          </p>
+        </div>
+
+        <div>
+          <h2>Other sites</h2>
+          <p>
+            Shop, membership and donations are hosted by Fourthwall. When you leave for
+            those pages, Fourthwall's terms and privacy policy apply. Discord, TikTok and
+            YouTube as destinations are their own services too.
+          </p>
+        </div>
+
+        <div>
+          <h2>Your rights</h2>
+          <p>
+            Depending on where you live, you can ask for access, correction, erasure,
+            restriction, portability, or to object. You can withdraw consent at any time
+            without affecting earlier lawful use. You can also lodge a complaint with a
+            data protection authority. In California, we do not sell personal information,
+            and a Global Privacy Control signal is treated as an opt-out of Analytics.
+          </p>
+          <p>
+            This site is not directed at children under 16. We do not knowingly collect
+            data from them through Analytics or YouTube embeds without a parent or guardian
+            making the cookie choice.
+          </p>
+        </div>
+
+        <div>
+          <h2>How long</h2>
+          <p>
+            Your cookie choice is stored on this device for 13 months, then we ask again.
+            Analytics data follows the Google Analytics property settings. YouTube cookies
+            last as long as Google sets them. We cannot delete cookies that live on
+            youtube.com. Turning YouTube off here stops new embeds from this site.
+          </p>
+        </div>
+
+        <section class="faq" aria-labelledby="privacy-faq-title">
+          <h2 class="faq__title" id="privacy-faq-title">Quick facts</h2>
+          <dl>
+            <div>
+              <dt>Do any optional cookies run before I choose?</dt>
+              <dd>No. Google Analytics and YouTube stay off until you accept them, together or one by one.</dd>
+            </div>
+            <div>
+              <dt>Can I reject Analytics but still play films?</dt>
+              <dd>
+                Yes. Customize, turn on YouTube only, and save. Or allow YouTube when the
+                player asks. Analytics stays off.
+              </dd>
+            </div>
+            <div>
+              <dt>How do I change my mind?</dt>
+              <dd>
+                Use Cookie settings on this page, or Cookies in the footer. Rejecting later
+                stops Analytics and new YouTube embeds on br4m.tv.
+              </dd>
+            </div>
+          </dl>
+        </section>
+      </section>
+    </main>
+
+    <footer class="foot">
+      <div class="shell">
+        <a class="foot__mark" href="/" aria-label="BR4M home" data-reveal>BR<i>4</i>M</a>
+
+        <div class="foot__grid">
+          <div class="foot__col" data-reveal data-reveal-stagger>
+            <h3>Pages</h3>
+            <a href="/movies">Movies</a>
+            <a href="/">Home</a>
+            <a href="/shop">Shop</a>
+            <a href="/donate">Support</a>
+            <a href="/press">Press</a>
+            <a href="/privacy" aria-current="page">Privacy</a>
+          </div>
+          <div class="foot__col" data-reveal data-reveal-stagger>
+            <h3>Channels</h3>
+            <a href="/youtube" target="_blank" rel="me noopener noreferrer">YouTube</a>
+            <a href="/discord" target="_blank" rel="me noopener noreferrer">Discord</a>
+            <a href="/tiktok" target="_blank" rel="me noopener noreferrer">TikTok</a>
+            <a href="https://br4m-shop.fourthwall.com/pages/memberships" target="_blank" rel="noopener noreferrer">
+              Membership
+            </a>
+          </div>
+          <div class="foot__col" data-reveal data-reveal-stagger>
+            <h3>BR4M</h3>
+            <p>Written, built and filmed inside Minecraft.</p>
+            <p>Release times follow BR4M's local clock below.</p>
+          </div>
+        </div>
+
+        <div class="foot__bar">
+          <p>© <span data-year>2026</span> BR4M</p>
+          <p><button type="button" class="ulink" data-open-consent>Cookies</button></p>
+          <p class="timecode" data-clock></p>
+        </div>
+      </div>
+    </footer>
+
+    <script type="module" src="/src/page.js"></script>
+  </body>
+</html>

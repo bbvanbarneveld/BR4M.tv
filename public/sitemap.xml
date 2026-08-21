@@ -54,6 +54,12 @@
     </image:image>
   </url>
   <url>
+    <loc>https://br4m.tv/privacy</loc>
+    <lastmod>2026-08-21</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.5</priority>
+  </url>
+  <url>
     <loc>https://br4m.tv/about.md</loc>
     <lastmod>2026-08-21</lastmod>
     <changefreq>monthly</changefreq>

@@ -27,6 +27,8 @@ const PAGE_REWRITES = {
   '/donate/': '/donate.html',
   '/press': '/press.html',
   '/press/': '/press.html',
+  '/privacy': '/privacy.html',
+  '/privacy/': '/privacy.html',
   '/404': '/404.html',
 }
 
@@ -179,6 +181,7 @@ export default defineConfig({
         shop: resolve(root, 'shop.html'),
         donate: resolve(root, 'donate.html'),
         press: resolve(root, 'press.html'),
+        privacy: resolve(root, 'privacy.html'),
         notFound: resolve(root, '404.html'),
       },
     },

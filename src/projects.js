@@ -4,6 +4,7 @@ import { moviePath, movieSlugFromLocation } from './site.js'
 import { mountCountdown, phaseOf, releaseStamp } from './countdown.js'
 import { calendarActionHtml, releaseActionHtml, releaseNote } from './release.js'
 import { bindCalendarDownload } from './calendar.js'
+import { hasMediaConsent, onConsent } from './consent.js'
 import { mountReel } from './reel.js'
 import { openStage, warmPlayer } from './player.js'
 import { MEMBERSHIP_URL, youtubeIdFrom } from './youtube-feed.js'
@@ -178,16 +179,31 @@ function renderFeature() {
 async function mountFeatureReel(host, entry) {
   if (!entry.reel) return
 
-  const reel = await mountReel(host.querySelector('[data-reel]'), {
-    videoId: entry.reel,
-    start: entry.reelStart || 0,
-    onPlaying: () => host.classList.add('has-reel'),
-  })
-  if (!reel) return
-  activeReel = reel
+  const startReel = async () => {
+    if (!hasMediaConsent() || activeReel) return
+    const reel = await mountReel(host.querySelector('[data-reel]'), {
+      videoId: entry.reel,
+      start: entry.reelStart || 0,
+      onPlaying: () => host.classList.add('has-reel'),
+    })
+    if (!reel) return
+    activeReel = reel
+  }
 
+  await startReel()
+  stoppers.push(
+    onConsent((choice) => {
+      if (choice?.media) startReel()
+      else {
+        activeReel?.destroy()
+        activeReel = null
+        host.classList.remove('has-reel')
+      }
+    }),
+  )
   stoppers.push(() => {
-    reel.destroy()
+    activeReel?.destroy()
+    activeReel = null
   })
 }
 
@@ -444,7 +460,10 @@ function route() {
 }
 
 export function mountProjects() {
-  warmPlayer()
+  if (hasMediaConsent()) warmPlayer()
+  onConsent((choice) => {
+    if (choice?.media) warmPlayer()
+  })
   adoptHashRoute()
   stopTimers()
   renderFeature()

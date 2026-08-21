@@ -1,3 +1,4 @@
+import { hasMediaConsent, hideMediaGate, onConsent, renderMediaGate } from './consent.js'
 import { loadYouTubeApi } from './reel.js'
 import { parkCursor } from './cursor.js'
 import { bindDialog, closeDialog, ICONS, openDialog } from './ui.js'
@@ -27,6 +28,7 @@ let overChrome = false
 let onCloseExtra = null
 let videoId = ''
 let fitFrame = null
+let stopGate = null
 
 function $(sel, root = document) {
   return root.querySelector(sel)
@@ -301,6 +303,19 @@ function posterFor(id) {
   return `https://i.ytimg.com/vi/${encodeURIComponent(id)}/maxresdefault.jpg`
 }
 
+function gateHost(root) {
+  let gate = $('[data-stage-gate]', root)
+  if (gate) return gate
+  const screen = $('[data-stage-screen]', root)
+  if (!screen) return null
+  gate = document.createElement('div')
+  gate.className = 'stage__gate'
+  gate.hidden = true
+  gate.dataset.stageGate = ''
+  screen.append(gate)
+  return gate
+}
+
 function armIframe(player) {
   try {
     const iframe = player.getIframe?.()
@@ -338,7 +353,11 @@ async function loadVideo(root, { id, title, start = 0, sound = true }) {
   paintFullscreen(root)
   fitScreen(root)
 
-  await loadYouTubeApi()
+  try {
+    await loadYouTubeApi()
+  } catch {
+    return
+  }
   if (videoId !== id) return
   const holder = document.createElement('div')
   mount.append(holder)
@@ -455,6 +474,9 @@ function bindStage(root) {
 
   bindDialog(root, {
     onClose: () => {
+      stopGate?.()
+      stopGate = null
+      hideMediaGate(gateHost(root))
       exitFullscreen(root)
       destroyPlayer()
       $('[data-stage-mount]', root)?.replaceChildren()
@@ -614,7 +636,8 @@ function bindStage(root) {
 
 /** Prefetch the IFrame API so a play click still counts as a user gesture. */
 export function warmPlayer() {
-  loadYouTubeApi()
+  if (!hasMediaConsent()) return
+  loadYouTubeApi().catch(() => {})
 }
 
 export function openStage({ id, title, start = 0, sound = true, onClose } = {}) {
@@ -627,12 +650,50 @@ export function openStage({ id, title, start = 0, sound = true, onClose } = {}) 
   overChrome = false
   showChrome(root, true)
   fitScreen(root)
+  const gate = gateHost(root)
+  if (!hasMediaConsent()) {
+    destroyPlayer()
+    videoId = id
+    const poster = $('[data-stage-poster]', root)
+    const label = $('[data-stage-title]', root)
+    if (label) label.textContent = title || ''
+    if (poster) {
+      poster.hidden = false
+      poster.src = posterFor(id)
+    }
+    const painted = renderMediaGate(gate, {
+      title: title || 'this film',
+      watchUrl: watchUrl(id),
+    })
+    painted?.cancel?.addEventListener(
+      'click',
+      () => {
+        hideMediaGate(gate)
+        closeStage()
+      },
+      { once: true },
+    )
+    stopGate?.()
+    stopGate = onConsent((choice) => {
+      if (!choice?.media) return
+      stopGate?.()
+      stopGate = null
+      hideMediaGate(gate)
+      if (videoId === id && root.open) loadVideo(root, { id, title, start, sound })
+    })
+    root.focus()
+    return
+  }
+  hideMediaGate(gate)
   loadVideo(root, { id, title, start, sound })
   root.focus()
 }
 
 export function closeStage() {
   const root = document.querySelector('[data-stage]')
+  stopGate?.()
+  stopGate = null
+  hideMediaGate(gateHost(root))
   exitFullscreen(root)
   closeDialog(root)
 }

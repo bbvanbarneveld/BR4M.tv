@@ -28,17 +28,20 @@ Keep these working in `nginx.conf` and the Vite plugin in `vite.config.js`.
 
 ## Site structure
 
-- Multi-page: `/` (home), `/movies`, `/shop`, `/donate`, `/press`. Clean URLs come from nginx
+- Multi-page: `/` (home), `/movies`, `/shop`, `/donate`, `/press`, `/privacy`. Clean URLs come from nginx
   `try_files $uri $uri.html` and the `br4m-routes` plugin in `vite.config.js`. Keep both in sync.
   Legacy `/watch` and `/projects` redirect to `/movies`. Unknown paths serve `404.html`.
 - Movies and releases are added by hand in `src/data/projects.js` (posters, banners, hero art,
   release instants, expected quarters, premiere URLs, trailer ids). `/movies` is the catalog
   hub (billboard + rails + on-site player). Movie detail routes are real paths:
   `/movies/the-architects`. Legacy hashes (`/movies#the-architects`) rewrite to that path.
-- Play films and trailers in the BR4M player (`src/player.js`) on top of YouTube. Do not send
-  the visitor to youtube.com for a hub play action. Embed on `www.youtube.com` (not
-  youtube-nocookie) so a play counts as a YouTube view. Like and Comment in the player
-  are the exception: they open that video on YouTube. Full screen uses the Fullscreen API
+- Play films and trailers in the BR4M player (`src/player.js`) on top of YouTube **after
+  YouTube cookie consent**. Do not load `iframe_api`, hero reels, or embeds before that
+  choice. Do not send the visitor to youtube.com for a hub play action once YouTube is
+  allowed. Embed on `www.youtube.com` (not youtube-nocookie) so a play counts as a
+  YouTube view. If they refuse, offer Open on YouTube as the equivalent path. Like and
+  Comment in the player are the exception: they open that video on YouTube. Full screen
+  uses the Fullscreen API
   (with a CSS cover fallback) and must exit when the player closes. During YouTube ads,
   lift BR4M overlays so Skip works; do not seek or rewrite the timeline from ad time.
   Untitled films stay "To be announced"; expected quarters must be labelled as estimates.
@@ -79,6 +82,17 @@ Keep these working in `nginx.conf` and the Vite plugin in `vite.config.js`.
   node when the player goes full screen. Restore the system pointer in smaller popups
   so a popup is never cursor-less.
 - After injecting DOM async, call `applyReveals(root)`, `initMagnetic(root)` and `refresh()`.
+
+## Cookies and Google
+
+- Optional vendors are only **Google Analytics 4** (`G-DJJBGLYNVJ`) and **YouTube**.
+  Load neither until the visitor accepts that category. Reject must be as easy as
+  accept. No pre-ticked optional boxes. Consent Mode v2 defaults stay denied, including
+  `ad_storage`, `ad_user_data` and `ad_personalization`. No Google Signals.
+- The Google tag is injected by `src/consent.js` after Analytics consent. Never paste
+  `gtag` into HTML so it runs on first paint.
+- Remember the choice in `localStorage` (`br4m.tv:consent`) for 13 months. Footer
+  Cookies and `/privacy` must reopen settings. English copy only.
 
 ## Search and AI crawlers
 

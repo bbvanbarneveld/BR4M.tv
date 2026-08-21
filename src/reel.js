@@ -1,3 +1,4 @@
+import { hasMediaConsent } from './consent.js'
 import { reducedMotion } from './motion.js'
 
 /**
@@ -8,6 +9,7 @@ import { reducedMotion } from './motion.js'
 let apiPromise = null
 
 export function loadYouTubeApi() {
+  if (!hasMediaConsent()) return Promise.reject(new Error('youtube-consent'))
   if (window.YT?.Player) return Promise.resolve()
   if (!apiPromise) {
     apiPromise = new Promise((resolve) => {
@@ -25,9 +27,13 @@ export function loadYouTubeApi() {
 }
 
 export async function mountReel(host, { videoId, start = 0, onPlaying } = {}) {
-  if (!host || !videoId || reducedMotion()) return null
+  if (!host || !videoId || reducedMotion() || !hasMediaConsent()) return null
 
-  await loadYouTubeApi()
+  try {
+    await loadYouTubeApi()
+  } catch {
+    return null
+  }
 
   const mount = document.createElement('div')
   host.append(mount)

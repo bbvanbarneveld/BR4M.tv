@@ -515,6 +515,47 @@ export function pressGraph() {
   ])
 }
 
+export const PRIVACY_FAQS = [
+  {
+    q: 'Do any optional cookies run before I choose?',
+    a: 'No. Google Analytics and YouTube stay off until you accept them, together or one by one.',
+  },
+  {
+    q: 'Can I reject Analytics but still play films?',
+    a: 'Yes. Customize, turn on YouTube only, and save. Or allow YouTube when the player asks. Analytics stays off.',
+  },
+  {
+    q: 'How do I change my mind?',
+    a: 'Use Cookie settings on the privacy page, or Cookies in the footer. Rejecting later stops Analytics and new YouTube embeds on br4m.tv.',
+  },
+]
+
+export function privacyGraph() {
+  const url = `${SITE_URL}/privacy`
+  return graph([
+    webPageNode({
+      url,
+      name: 'Privacy and cookies, BR4M',
+      description:
+        'How BR4M uses cookies. Google Analytics and YouTube stay off until you choose. You can reject as easily as you accept.',
+    }),
+    breadcrumbNode([
+      { name: 'Home', url: `${SITE_URL}/` },
+      { name: 'Privacy', url },
+    ]),
+    {
+      '@type': 'FAQPage',
+      '@id': `${url}#faq`,
+      url,
+      mainEntity: PRIVACY_FAQS.map((item) => ({
+        '@type': 'Question',
+        name: item.q,
+        acceptedAnswer: { '@type': 'Answer', text: item.a },
+      })),
+    },
+  ])
+}
+
 export function pageSeo(name) {
   const copy = featuredCopy()
   const pages = {
@@ -572,6 +613,17 @@ export function pageSeo(name) {
       markdown: '/press.md',
       graph: pressGraph(),
     },
+    privacy: {
+      title: 'Privacy and cookies, BR4M',
+      description:
+        'How BR4M uses cookies. Google Analytics and YouTube stay off until you choose. You can reject as easily as you accept.',
+      url: `${SITE_URL}/privacy`,
+      image: SHARE,
+      imageAlt: 'BR4M privacy',
+      type: 'website',
+      markdown: '/privacy.md',
+      graph: privacyGraph(),
+    },
   }
   return pages[name] || null
 }
@@ -583,6 +635,7 @@ export function pageNameFromFile(file = '') {
   if (base === 'shop.html') return 'shop'
   if (base === 'donate.html') return 'donate'
   if (base === 'press.html') return 'press'
+  if (base === 'privacy.html') return 'privacy'
   return null
 }
 
@@ -733,6 +786,7 @@ export function htmlPages() {
       image: SHARE,
       imageTitle: 'BR4M press kit',
     },
+    { loc: `${SITE_URL}/privacy`, priority: '0.5', changefreq: 'yearly' },
     { loc: `${SITE_URL}/about.md`, priority: '0.4', changefreq: 'monthly' },
   ]
 }
@@ -836,6 +890,7 @@ ${series}
 - [Shop](${SITE_URL}/shop.md): official merch when a drop is live. Checkout is Fourthwall
 - [Support](${SITE_URL}/donate.md): BR4M+ membership and one-time donations
 - [Press](${SITE_URL}/press.md): logline, premiere stamp, downloadable stills, Discord contact
+- [Privacy](${SITE_URL}/privacy.md): cookies, Google Analytics, YouTube, how to change your choice
 - [About](${SITE_URL}/about.md): full entity facts for machines
 - [LLM full text](${SITE_URL}/llms-full.txt): the same facts as one document
 
@@ -1093,6 +1148,23 @@ Contact: Discord (${DISCORD_URL}).
 `
 }
 
+function privacyMarkdown() {
+  return `# Privacy and cookies, BR4M
+
+> Optional Google tools stay off until you choose. Rejecting is as easy as accepting.
+
+Canonical page: ${SITE_URL}/privacy
+
+BR4M is the controller for br4m.tv. Contact: Discord (${DISCORD_URL}).
+
+Optional cookies are Google Analytics 4 (measurement ID G-DJJBGLYNVJ) and YouTube. Both are Google services. They do not run before consent. Necessary storage remembers this choice, and a currency if you pick one.
+
+${PRIVACY_FAQS.map((item) => `## ${item.q}\n\n${item.a}`).join('\n\n')}
+
+Films play on youtube.com so a play can count as a YouTube view. Shop, membership and donations are hosted by Fourthwall.
+`
+}
+
 export function tdmrepJson() {
   return `${json([
     {
@@ -1117,6 +1189,7 @@ export function writeSeoFiles(dir) {
   writeFileSync(resolve(root, 'shop.md'), shopMarkdown())
   writeFileSync(resolve(root, 'donate.md'), donateMarkdown())
   writeFileSync(resolve(root, 'press.md'), pressMarkdown())
+  writeFileSync(resolve(root, 'privacy.md'), privacyMarkdown())
   writeFileSync(resolve(root, '.well-known/llms.txt'), llmsTxt())
   writeFileSync(resolve(root, '.well-known/tdmrep.json'), tdmrepJson())
   writeFileSync(resolve(root, `${INDEXNOW_KEY}.txt`), `${INDEXNOW_KEY}\n`)

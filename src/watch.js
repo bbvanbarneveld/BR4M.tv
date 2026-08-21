@@ -1,6 +1,7 @@
 import videos from './data/videos.json'
 import { fetchLatestVideos, withoutShorts, YOUTUBE_URL } from './youtube-feed.js'
-import { ICONS, bindDialog, escapeHtml, openDialog } from './ui.js'
+import { hasMediaConsent, hideMediaGate, onConsent, renderMediaGate } from './consent.js'
+import { ICONS, bindDialog, closeDialog, escapeHtml, openDialog } from './ui.js'
 import { applyReveals, refresh } from './motion.js'
 
 const CACHE_KEY = 'br4m.tv:videos'
@@ -73,13 +74,46 @@ export function openPlayer(video) {
   const title = dialog?.querySelector('[data-player-title]')
   if (!dialog || !frame) return
 
+  let stop = null
   bindDialog(dialog, {
     onClose: () => {
+      stop?.()
       frame.innerHTML = ''
     },
   })
   if (title) title.textContent = video.title
-  frame.innerHTML = embed(video.id, video.title)
+
+  const playEmbed = () => {
+    hideMediaGate(frame)
+    frame.innerHTML = embed(video.id, video.title)
+  }
+
+  if (!hasMediaConsent()) {
+    frame.innerHTML = ''
+    const gate = document.createElement('div')
+    gate.className = 'player__gate'
+    frame.append(gate)
+    const painted = renderMediaGate(gate, {
+      title: video.title,
+      watchUrl: video.url || `https://www.youtube.com/watch?v=${encodeURIComponent(video.id)}`,
+    })
+    painted?.cancel?.addEventListener(
+      'click',
+      () => {
+        closeDialog(dialog)
+      },
+      { once: true },
+    )
+    stop = onConsent((choice) => {
+      if (!choice?.media || !dialog.open) return
+      stop?.()
+      playEmbed()
+    })
+    openDialog(dialog)
+    return
+  }
+
+  playEmbed()
   openDialog(dialog)
 }
 

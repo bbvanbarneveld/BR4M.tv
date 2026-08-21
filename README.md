@@ -14,6 +14,7 @@ film stills as heroes, letterbox page reveals, film grain, a live CET clock.
 | `/shop` | `shop.html` | Fourthwall catalog, currency globe, bag, checkout |
 | `/donate` | `donate.html` | BR4M+ membership, one-time donations, Discord |
 | `/press` | `press.html` | Logline, premiere stamp, downloadable stills, facts |
+| `/privacy` | `privacy.html` | Cookie and privacy policy, Google Analytics, YouTube |
 | `/llms.txt` | generated | Curated map of the site for AI crawlers |
 | `/llms-full.txt` | generated | Full entity facts plus FAQ for AI ingest |
 | `/about.md` | generated | Entity facts for machines |
@@ -96,6 +97,7 @@ public Storefront API, and checkout is always hosted by Fourthwall.
 | `src/fourthwall.js` | Storefront API client |
 | `src/youtube-feed.js` | Feed parsing, brand URLs, vanity routes |
 | `src/seo.js` | JSON-LD graphs, sitemap, robots.txt, llms.txt, page Markdown, IndexNow |
+| `src/consent.js` | Cookie banner, Consent Mode v2, GA4 tag, YouTube gate |
 
 ## Vanity routes
 

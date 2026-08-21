@@ -2,6 +2,7 @@ import './style.css'
 import { initChrome } from './chrome.js'
 import { initCursor } from './cursor.js'
 import { applyReveals, initMagnetic, initMotion, pageReveal, refresh } from './motion.js'
+import { initConsent } from './consent.js'
 import { getCurrency, localizedShopUrl, onCurrency } from './currency.js'
 
 const SHOP_HOST = 'br4m-shop.fourthwall.com'
@@ -63,6 +64,7 @@ export function startApp(mount) {
     initMotion()
     initCursor()
     await pageReveal()
+    initConsent()
     applyReveals(document)
     initMagnetic(document)
     refresh()

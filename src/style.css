@@ -74,6 +74,7 @@
   --z-topbar: 60;
   --z-drawer: 70;
   --z-stage: 80;
+  --z-consent: 85;
   --z-cursor: 90;
   --z-skip: 120;
 }
@@ -2935,6 +2936,10 @@ body:has(.void) .foot__mark {
   margin: 0;
 }
 
+.foot__bar .ulink {
+  color: var(--ink-36);
+}
+
 /* ── Shop ────────────────────────────────────────────────── */
 
 .wall {
@@ -4121,6 +4126,216 @@ dialog::backdrop {
   font-size: var(--step--1);
   color: var(--ink-36);
   text-align: center;
+}
+
+/* ── Cookie consent ──────────────────────────────────────── */
+
+.consent {
+  position: fixed;
+  right: var(--gutter);
+  bottom: max(1rem, env(safe-area-inset-bottom));
+  left: var(--gutter);
+  z-index: var(--z-consent);
+  pointer-events: none;
+}
+
+body.is-dialog .consent {
+  visibility: hidden;
+}
+
+.consent__box {
+  pointer-events: auto;
+  max-width: 52rem;
+  max-height: min(82vh, 40rem);
+  margin-inline: auto;
+  overflow: auto;
+  padding: clamp(1.15rem, 2.4vw, 1.75rem);
+  border: 1px solid var(--line);
+  background: #000;
+  color: var(--ink);
+}
+
+.consent__title {
+  margin: 0.15rem 0 0.55rem;
+  font-size: var(--step-1);
+  font-weight: 600;
+  letter-spacing: -0.03em;
+  line-height: 1.15;
+}
+
+.consent__lead,
+.consent__opt-text span,
+.consent__links,
+.media-gate__lead {
+  max-width: 48ch;
+  font-size: var(--step--1);
+  line-height: 1.55;
+  color: var(--ink-70);
+  text-wrap: pretty;
+}
+
+.consent__actions,
+.media-gate__actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.65rem 0.85rem;
+  margin-top: var(--gap-md);
+}
+
+.consent__links {
+  margin-top: var(--gap-sm);
+}
+
+.consent__opts {
+  display: grid;
+  gap: 0.2rem;
+  margin-top: var(--gap-md);
+  border-top: 1px solid var(--line-soft);
+}
+
+.consent__opt {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 1rem;
+  align-items: center;
+  padding-block: 0.95rem;
+  border-bottom: 1px solid var(--line-soft);
+  cursor: pointer;
+}
+
+.consent__opt strong {
+  display: block;
+  margin-bottom: 0.2rem;
+  font-size: var(--step-0);
+  font-weight: 600;
+}
+
+.consent__opt input {
+  appearance: none;
+  width: 2.55rem;
+  height: 1.4rem;
+  flex-shrink: 0;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: transparent;
+  cursor: pointer;
+  transition:
+    background-color var(--t-mid) var(--ease-soft),
+    border-color var(--t-mid) var(--ease-soft);
+}
+
+.consent__opt input::after {
+  content: "";
+  display: block;
+  width: 0.85rem;
+  height: 0.85rem;
+  margin: 0.2rem;
+  border-radius: 50%;
+  background: var(--ink);
+  transform: translateX(0);
+  transition: transform var(--t-mid) var(--ease-expo);
+}
+
+.consent__opt input:checked {
+  background: var(--ink);
+  border-color: var(--ink);
+}
+
+.consent__opt input:checked::after {
+  background: #000;
+  transform: translateX(1.1rem);
+}
+
+.consent__opt input:disabled {
+  cursor: default;
+  opacity: 0.55;
+}
+
+.consent__opt input:focus-visible {
+  outline: 2px solid var(--violet);
+  outline-offset: 3px;
+}
+
+.stage__gate,
+.player__gate {
+  position: absolute;
+  inset: 0;
+  z-index: 4;
+  display: grid;
+  place-items: center;
+  padding: var(--gutter);
+  background: rgba(0, 0, 0, 0.72);
+  pointer-events: auto;
+}
+
+.stage__gate[hidden],
+.player__gate[hidden] {
+  display: none;
+}
+
+.media-gate {
+  max-width: 34rem;
+}
+
+.media-gate__title {
+  margin: 0.2rem 0 0.6rem;
+  font-size: var(--step-1);
+  font-weight: 600;
+  letter-spacing: -0.03em;
+  line-height: 1.15;
+}
+
+.policy {
+  display: grid;
+  gap: var(--gap-lg);
+  max-width: 62ch;
+}
+
+.policy h2 {
+  margin: 0 0 0.55rem;
+  font-size: var(--step-1);
+  font-weight: 600;
+  letter-spacing: -0.03em;
+}
+
+.policy p,
+.policy li {
+  color: var(--ink-70);
+  text-wrap: pretty;
+}
+
+.policy ul {
+  display: grid;
+  gap: 0.4rem;
+  padding-left: 1.15rem;
+}
+
+.policy-table-wrap {
+  overflow-x: auto;
+}
+
+.policy-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: var(--step--1);
+}
+
+.policy-table th,
+.policy-table td {
+  padding: 0.8rem 0.75rem 0.8rem 0;
+  border-bottom: 1px solid var(--line-soft);
+  text-align: left;
+  vertical-align: top;
+}
+
+.policy-table th {
+  color: var(--ink);
+  font-weight: 600;
+}
+
+.policy-table td {
+  color: var(--ink-70);
 }
 
 /* ── Motion safety ───────────────────────────────────────── */
