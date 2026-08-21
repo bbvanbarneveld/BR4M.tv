@@ -22,8 +22,9 @@ Keep these working in `nginx.conf` and the Vite plugin in `vite.config.js`.
 
 ## Docs discipline
 
-- `DESIGN.md` is the design source of truth. **Every relevant change updates `DESIGN.md`,
-  `README.md` and this file in the same commit.**
+- `DESIGN.md` is the design source of truth: identity, colour, type, motion, pages,
+  and how to invent new UI. Read it before changing how the site looks. **Every
+  relevant change updates `DESIGN.md`, `README.md` and this file in the same commit.**
 
 ## Site structure
 

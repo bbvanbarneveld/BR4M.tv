@@ -19,7 +19,9 @@ film stills as heroes, letterbox page reveals, film grain, a live CET clock.
 Legacy `/watch` and `/projects` redirect to `/movies`. Legacy `/movies#slug` rewrites to
 `/movies/slug`.
 
-Design rules live in `DESIGN.md`; keep it in sync with every change.
+Design rules live in `DESIGN.md` (full visual briefing for anyone designing the
+site). Keep it in sync with every relevant change, together with this file and
+`AGENTS.md`.
 
 Clean URLs are handled by nginx (`try_files $uri $uri.html`) in production and by the
 `br4m-routes` plugin in `vite.config.js` during dev.
